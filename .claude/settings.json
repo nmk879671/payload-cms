@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -oE \"\\\\.editor-[a-z_-]*[^,{}]*\\\\{[^}]+\\\\}\" /Users/winnie/Winnie/payload-cms/node_modules/@payloadcms/richtext-lexical/dist/field/bundled.css)",
+      "Bash(grep -oE \"\\\\.toolbar-[a-z_-]*[^,{}]*\\\\{[^}]+\\\\}\" /Users/winnie/Winnie/payload-cms/node_modules/@payloadcms/richtext-lexical/dist/field/bundled.css)",
+      "Bash(grep -oE \"\\\\.slash-?[a-z_-]*[^,{}]*\\\\{[^}]+\\\\}\" /Users/winnie/Winnie/payload-cms/node_modules/@payloadcms/richtext-lexical/dist/field/bundled.css)",
+      "Bash(grep -oE \"\\\\.typeahead[^,{}]*\\\\{[^}]+\\\\}\" /Users/winnie/Winnie/payload-cms/node_modules/@payloadcms/richtext-lexical/dist/field/bundled.css)",
+      "Bash(grep -oE \"\\\\.draggable-block[^,{}]*\\\\{[^}]+\\\\}\" /Users/winnie/Winnie/payload-cms/node_modules/@payloadcms/richtext-lexical/dist/field/bundled.css)",
+      "Bash(grep -oE \"\\\\.LexicalEditorTheme__[a-zA-Z]+[^,{}]*\\\\{[^}]+\\\\}\" /Users/winnie/Winnie/payload-cms/node_modules/@payloadcms/richtext-lexical/dist/field/bundled.css)",
+      "Bash(grep -oE \"\\\\.inline-toolbar-popup[^,{}]*\\\\{[^}]+\\\\}\" /Users/winnie/Winnie/payload-cms/node_modules/@payloadcms/richtext-lexical/dist/field/bundled.css)",
+      "Bash(kill 16108 16109 16115)",
+      "Bash(grep -oE \"\\\\.blocks-field__row[^,{}]*\\\\{[^}]+\\\\}\" /Users/winnie/Winnie/payload-cms/node_modules/@payloadcms/ui/dist/elements/styles.css)",
+      "Bash(grep -oE \"\\\\.blocks-field__row[^,{}]*\\\\{[^}]+\\\\}\" /Users/winnie/Winnie/payload-cms/node_modules/@payloadcms/next/dist/prod/styles.css)"
+    ]
+  }
+}

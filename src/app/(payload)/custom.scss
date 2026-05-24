@@ -1,231 +1,303 @@
 /* ============================================================
-   Indigo SaaS theme for Payload Admin
+   Modern Enterprise SaaS theme for Payload Admin
+   Dark-first · Linear / Vercel / Notion-inspired
    ============================================================ */
 
 :root {
-  /* Brand — Indigo */
-  --brand-50:  246 247 255;
-  --brand-100: 232 235 255;
-  --brand-200: 209 214 255;
-  --brand-300: 178 184 255;
-  --brand-400: 138 142 255;
-  --brand-500: 99 102 241;   /* #6366F1 primary */
-  --brand-600: 79 70 229;
-  --brand-700: 67 56 202;
-  --brand-800: 55 48 163;
-  --brand-900: 49 46 129;
+  /* Brand — soft electric blue */
+  --mc-brand-50:  239 244 255;
+  --mc-brand-100: 222 232 255;
+  --mc-brand-200: 196 213 255;
+  --mc-brand-300: 158 184 255;
+  --mc-brand-400: 121 159 255;
+  --mc-brand-500: 91 140 255;   /* #5B8CFF primary */
+  --mc-brand-600: 71 116 230;
+  --mc-brand-700: 59 96 196;
+  --mc-brand-800: 48 78 158;
+  --mc-brand-900: 38 62 124;
 
-  --brand: rgb(var(--brand-500));
-  --brand-hover: rgb(var(--brand-600));
-  --brand-soft: rgba(99, 102, 241, 0.12);
-  --brand-ring: rgba(99, 102, 241, 0.35);
+  --mc-brand:        rgb(var(--mc-brand-500));
+  --mc-brand-hover:  rgb(var(--mc-brand-600));
+  --mc-brand-soft:   rgba(91, 140, 255, 0.10);
+  --mc-brand-soft-2: rgba(91, 140, 255, 0.16);
+  --mc-brand-ring:   rgba(91, 140, 255, 0.32);
+  --mc-brand-glow:   0 0 24px rgba(91, 140, 255, 0.18);
 
-  --radius-sm: 8px;
-  --radius:    10px;
-  --radius-lg: 14px;
-  --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.06);
+  /* Layout sizing */
+  --mc-sidebar-w:           280px;
+  --mc-sidebar-w-collapsed: 72px;
+  --mc-topbar-h:            56px;
+
+  /* Override Payload's --nav-width to match our sidebar */
+  --nav-width: 280px;
+  --app-header-height: 0px; /* hide AppHeader */
+
+  /* Radius scale */
+  --mc-radius-sm: 8px;
+  --mc-radius:    12px;
+  --mc-radius-lg: 16px;
+  --mc-radius-xl: 20px;
+  --mc-radius-2xl: 24px;
+
+  /* Easing & duration */
+  --mc-ease:        cubic-bezier(0.22, 1, 0.36, 1);
+  --mc-ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --mc-dur-fast:    140ms;
+  --mc-dur:         220ms;
+  --mc-dur-slow:    320ms;
+
+  /* Shadows */
+  --mc-shadow-soft: 0 1px 2px rgba(0,0,0,0.20), 0 8px 24px rgba(0,0,0,0.18);
+  --mc-shadow-lg:   0 12px 32px rgba(0,0,0,0.30), 0 2px 6px rgba(0,0,0,0.22);
+  --mc-shadow-glow: 0 8px 24px rgba(91, 140, 255, 0.20);
 }
 
-/* ----- Light theme tweaks ----- */
-[data-theme='light'] {
-  --theme-bg: #f7f8fc;
-  --theme-input-bg: #ffffff;
-  --theme-elevation-0:   #ffffff;
-  --theme-elevation-50:  #f7f8fc;
-  --theme-elevation-100: #eef0f7;
-  --theme-elevation-150: #e5e8f2;
-  --theme-elevation-200: #d8dceb;
-
-  --theme-success-500: var(--brand);
+/* When NavClient marks itself collapsed, shrink the grid column */
+body.mc-nav-collapsed {
+  --nav-width: 72px;
 }
 
-/* ----- Dark theme tweaks ----- */
+/* ============================================================
+   DARK THEME (primary)
+   ============================================================ */
 [data-theme='dark'] {
-  --theme-bg: #0f1117;
-  --theme-elevation-0:   #14161e;
-  --theme-elevation-50:  #181b24;
-  --theme-elevation-100: #1e2230;
-  --theme-elevation-150: #252a3a;
-  --theme-elevation-200: #2c3245;
+  --mc-bg:         #0B0D10;
+  --mc-sidebar:    #11151A;
+  --mc-surface-0:  #11151A;
+  --mc-surface-1:  #151A21;
+  --mc-surface-2:  #1B222C;
+  --mc-border:     #252F3D;
+  --mc-border-soft: #1E2632;
+  --mc-text:       #F5F7FA;
+  --mc-text-2:     #C7CFDB;
+  --mc-text-3:     #9AA4B2;
+  --mc-text-4:     #6B7280;
+
+  /* Map Payload's elevation scale onto our palette */
+  --theme-bg: var(--mc-bg);
+  --theme-input-bg: var(--mc-surface-1);
+  --theme-elevation-0:   var(--mc-surface-0);
+  --theme-elevation-50:  var(--mc-surface-1);
+  --theme-elevation-100: var(--mc-surface-2);
+  --theme-elevation-150: #232C39;
+  --theme-elevation-200: var(--mc-border);
+  --theme-elevation-250: #2E3A4D;
+  --theme-elevation-300: #34425A;
+  --theme-elevation-400: #3F5070;
+  --theme-elevation-500: var(--mc-text-3);
+  --theme-elevation-600: var(--mc-text-2);
+  --theme-elevation-700: #DEE3EC;
+  --theme-elevation-800: var(--mc-text);
+  --theme-elevation-900: #FFFFFF;
+  --theme-elevation-1000: #FFFFFF;
+
+  --theme-text: var(--mc-text);
+  --theme-success-500: var(--mc-brand);
+}
+
+/* ============================================================
+   LIGHT THEME (fallback)
+   ============================================================ */
+[data-theme='light'] {
+  --mc-bg:         #F7F8FA;
+  --mc-sidebar:    #FFFFFF;
+  --mc-surface-0:  #FFFFFF;
+  --mc-surface-1:  #FFFFFF;
+  --mc-surface-2:  #F2F4F8;
+  --mc-border:     #E5E8EE;
+  --mc-border-soft: #EEF0F4;
+  --mc-text:       #0B0D10;
+  --mc-text-2:     #2E3543;
+  --mc-text-3:     #5C6573;
+  --mc-text-4:     #8A93A1;
+
+  --theme-bg: var(--mc-bg);
+  --theme-elevation-0:   #FFFFFF;
+  --theme-elevation-50:  #FAFBFC;
+  --theme-elevation-100: #F2F4F8;
+  --theme-elevation-150: #E9ECF2;
+  --theme-elevation-200: var(--mc-border);
 }
 
 /* ============================================================
    Typography
    ============================================================ */
+:root,
 body,
 .payload__app {
-  font-feature-settings: 'cv11', 'ss01';
+  font-family: 'Inter', 'Geist', 'SF Pro Display', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, sans-serif;
+  font-feature-settings: 'cv11', 'ss01', 'cv03';
   letter-spacing: -0.005em;
 }
 
+[data-theme='dark'] body {
+  background: var(--mc-bg);
+  color: var(--mc-text);
+}
+
 h1, h2, h3, h4 {
-  letter-spacing: -0.02em;
-}
-
-/* ============================================================
-   Sidebar / Nav
-   ============================================================ */
-.nav,
-.template-default__nav {
-  background: var(--theme-elevation-0) !important;
-  border-right: 1px solid var(--theme-elevation-100);
-}
-
-.nav__wrap,
-.template-default__nav .nav__wrap {
-  padding: 18px 14px !important;
-  gap: 4px;
-}
-
-/* Brand area at top of nav */
-.nav__header,
-.app-header__brand {
-  padding: 6px 10px 18px;
-  margin-bottom: 6px;
-  border-bottom: 1px solid var(--theme-elevation-100);
-}
-
-/* Group labels — smaller, uppercase, muted */
-.nav-group__label,
-.nav-group__toggle {
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.08em !important;
-  text-transform: uppercase !important;
-  color: var(--theme-elevation-500) !important;
-  padding: 14px 10px 6px !important;
-  background: transparent !important;
-}
-
-/* Links */
-.nav__link {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 12px !important;
-  margin: 1px 0;
-  border-radius: var(--radius-sm) !important;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--theme-elevation-800);
-  transition: background 140ms ease, color 140ms ease, transform 140ms ease;
-}
-
-.nav__link:hover {
-  background: var(--theme-elevation-50) !important;
-  color: var(--brand) !important;
-  transform: translateX(2px);
-}
-
-.nav__link--active,
-a[aria-current='page'].nav__link {
-  background: var(--brand-soft) !important;
-  color: var(--brand) !important;
+  letter-spacing: -0.018em;
   font-weight: 600;
 }
 
-/* Left accent bar on active item */
-.nav__link--active::before,
-a[aria-current='page'].nav__link::before {
-  content: '';
-  position: absolute;
-  left: -4px;
-  top: 8px;
-  bottom: 8px;
-  width: 3px;
-  border-radius: 999px;
-  background: var(--brand);
+h1 { letter-spacing: -0.024em; font-weight: 700; }
+
+/* ============================================================
+   App shell layout
+   - Topbar is fixed at the top of viewport (z-index 60)
+   - Push the entire admin template below the topbar
+   - Sidebar lives in the first grid column (Payload's grid)
+   ============================================================ */
+.payload__app {
+  background: var(--mc-bg);
 }
 
-/* Icons inside nav links */
-.nav__link svg,
-.nav__link .icon {
-  width: 16px;
-  height: 16px;
-  opacity: 0.75;
+/* Push the grid container below the fixed topbar */
+.template-default {
+  padding-top: var(--mc-topbar-h);
 }
 
-.nav__link:hover svg,
-.nav__link--active svg {
-  opacity: 1;
+/* Hide Payload's own AppHeader entirely — our Topbar replaces it */
+.app-header {
+  display: none !important;
+}
+
+/* Hide the mobile-only nav toggler wrapper — Topbar has its own hamburger */
+.template-default__nav-toggler-wrapper {
+  display: none !important;
+}
+
+/* Sidebar column should never overflow its width */
+.template-default {
+  transition: grid-template-columns var(--mc-dur) var(--mc-ease) !important;
 }
 
 /* ============================================================
-   Buttons
+   Make the Payload nav slot host our sidebar cleanly
+   - Payload's NavWrapper renders only when our Nav returns content.
+   - Our custom Nav returns <aside class="mc-sidebar"> directly,
+     so we just need to ensure the grid column behaves nicely.
+   ============================================================ */
+.template-default {
+  background: var(--mc-bg);
+}
+
+/* ============================================================
+   Hide leftover Payload nav chrome (defensive — these classes
+   only render if the default Nav fallback is shown)
+   ============================================================ */
+.nav__header,
+.app-header__brand,
+.nav__controls,
+.nav__wrap > .nav-group,
+.nav__wrap > .nav__link {
+  display: none !important;
+}
+
+/* ============================================================
+   Buttons — premium feel
    ============================================================ */
 .btn--style-primary,
 .btn--style-primary:not(:disabled) {
-  background: var(--brand) !important;
-  border-color: var(--brand) !important;
+  background: var(--mc-brand) !important;
+  border-color: var(--mc-brand) !important;
   color: #fff !important;
-  border-radius: var(--radius) !important;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
-  transition: background 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+  border-radius: var(--mc-radius) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: background var(--mc-dur-fast) var(--mc-ease),
+              transform var(--mc-dur-fast) var(--mc-ease),
+              box-shadow var(--mc-dur) var(--mc-ease);
+  font-weight: 600;
 }
 
 .btn--style-primary:hover:not(:disabled) {
-  background: var(--brand-hover) !important;
-  border-color: var(--brand-hover) !important;
+  background: var(--mc-brand-hover) !important;
+  border-color: var(--mc-brand-hover) !important;
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.32);
+  box-shadow: var(--mc-shadow-glow);
 }
 
 .btn--style-secondary {
-  border-radius: var(--radius) !important;
+  border-radius: var(--mc-radius) !important;
+  background: var(--mc-surface-2) !important;
+  border-color: var(--mc-border) !important;
+  color: var(--mc-text-2) !important;
+  transition: all var(--mc-dur-fast) var(--mc-ease);
+}
+
+.btn--style-secondary:hover {
+  background: var(--mc-surface-2) !important;
+  border-color: var(--mc-brand) !important;
+  color: var(--mc-text) !important;
 }
 
 .btn:focus-visible {
-  outline: 3px solid var(--brand-ring) !important;
-  outline-offset: 1px;
+  outline: 2px solid var(--mc-brand) !important;
+  outline-offset: 2px;
 }
 
 /* ============================================================
-   Inputs
+   Inputs — modern dark form
    ============================================================ */
 .field-type input,
 .field-type textarea,
 .field-type .rs__control,
 .field-type select {
-  border-radius: var(--radius-sm) !important;
-  transition: border-color 120ms ease, box-shadow 120ms ease;
+  border-radius: var(--mc-radius-sm) !important;
+  background: var(--mc-surface-1) !important;
+  border: 1px solid var(--mc-border) !important;
+  color: var(--mc-text) !important;
+  transition: border-color var(--mc-dur-fast) var(--mc-ease),
+              box-shadow var(--mc-dur-fast) var(--mc-ease),
+              background var(--mc-dur-fast) var(--mc-ease);
 }
 
 .field-type input:focus,
 .field-type textarea:focus,
 .field-type .rs__control--is-focused {
-  border-color: var(--brand) !important;
-  box-shadow: 0 0 0 3px var(--brand-ring) !important;
+  border-color: var(--mc-brand) !important;
+  box-shadow: 0 0 0 3px var(--mc-brand-ring) !important;
+  outline: none !important;
+}
+
+.field-type input::placeholder,
+.field-type textarea::placeholder {
+  color: var(--mc-text-4) !important;
+}
+
+/* Field label refinement */
+.field-label,
+.field-type .field-label {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--mc-text-3) !important;
+  letter-spacing: 0.01em;
+  margin-bottom: 6px !important;
 }
 
 /* ============================================================
-   Cards / Lists / Tables
+   Cards / surfaces
    ============================================================ */
 .card,
 .collection-list__sub-header,
 .dashboard__group,
 .list-controls {
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-soft);
-}
-
-.table {
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.table tr:hover td {
-  background: var(--brand-soft) !important;
+  background: var(--mc-surface-0) !important;
+  border: 1px solid var(--mc-border-soft) !important;
+  border-radius: var(--mc-radius-lg) !important;
+  box-shadow: var(--mc-shadow-soft);
 }
 
 /* ============================================================
-   Pills / Badges (status, roles)
+   Pills / badges / status
    ============================================================ */
 .pill,
 .status__value {
   border-radius: 999px !important;
   font-weight: 600;
   letter-spacing: 0.01em;
+  font-size: 11px;
 }
 
 /* ============================================================
@@ -233,16 +305,1439 @@ a[aria-current='page'].nav__link::before {
    ============================================================ */
 .template-minimal {
   background:
-    radial-gradient(1200px 600px at 80% -10%, rgba(99, 102, 241, 0.18), transparent 60%),
-    radial-gradient(900px 500px at -10% 110%, rgba(139, 92, 246, 0.16), transparent 60%),
-    var(--theme-bg);
+    radial-gradient(1000px 600px at 80% -10%, rgba(91, 140, 255, 0.18), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(139, 92, 246, 0.14), transparent 60%),
+    var(--mc-bg);
 }
 
 .template-minimal__wrap form,
 .login__wrap form {
-  background: var(--theme-elevation-0);
-  border: 1px solid var(--theme-elevation-100);
-  border-radius: var(--radius-lg);
-  padding: 32px;
-  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+  background: var(--mc-surface-1);
+  border: 1px solid var(--mc-border);
+  border-radius: var(--mc-radius-lg);
+  padding: 36px;
+  box-shadow: var(--mc-shadow-lg);
+}
+
+/* ============================================================
+   Scrollbar
+   ============================================================ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--mc-border) transparent;
+}
+
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--mc-border);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--mc-text-4); background-clip: padding-box; }
+
+/* ============================================================
+   Selection
+   ============================================================ */
+::selection {
+  background: var(--mc-brand-soft-2);
+  color: var(--mc-text);
+}
+
+/* ============================================================
+   Page content gutter — pull content away from edges
+   ============================================================ */
+.template-default__wrap {
+  background: var(--mc-bg) !important;
+}
+
+/* Remove the giant default top margin that AppHeader used to occupy */
+.collection-list,
+.dashboard,
+.document {
+  padding-top: 0 !important;
+}
+
+/* ============================================================
+   ============================================================
+   STEP 2 — Collection List View
+   Modern data management — sticky toolbar, premium table, hover lift
+   ============================================================
+   ============================================================ */
+
+/* ----- Outer wrapper ----- */
+.collection-list {
+  --mc-list-pad: 28px;
+  padding: 24px var(--mc-list-pad) 56px !important;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.collection-list__wrap > *:not(:last-child) {
+  margin-bottom: 18px !important;
+}
+
+/* ----- List header (title + actions) ----- */
+.list-header {
+  padding: 8px 0 18px;
+  border-bottom: 1px solid var(--mc-border-soft);
+  margin-bottom: 16px !important;
+}
+
+.list-header__title {
+  font-size: 24px !important;
+  line-height: 32px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.022em;
+  color: var(--mc-text) !important;
+}
+
+.list-header__actions {
+  gap: 8px !important;
+}
+
+.list-header__actions .btn {
+  height: 34px !important;
+  padding: 0 14px !important;
+  font-size: 13px !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+}
+
+/* ----- Sticky toolbar (search + filters) ----- */
+.list-controls {
+  position: sticky !important;
+  top: var(--mc-topbar-h) !important;
+  z-index: 20 !important;
+  padding: 12px !important;
+  background: rgba(17, 21, 26, 0.78) !important;
+  backdrop-filter: saturate(140%) blur(12px) !important;
+  -webkit-backdrop-filter: saturate(140%) blur(12px) !important;
+  border: 1px solid var(--mc-border-soft) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.20), 0 8px 24px rgba(0,0,0,0.10) !important;
+}
+
+[data-theme='light'] .list-controls {
+  background: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Search bar inside list controls */
+.list-controls .search-bar {
+  --search-bg: var(--mc-surface-1) !important;
+  min-height: 38px !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--mc-border-soft);
+  background: var(--mc-surface-1) !important;
+  transition: border-color var(--mc-dur-fast) var(--mc-ease),
+              box-shadow var(--mc-dur-fast) var(--mc-ease);
+}
+
+.list-controls .search-bar:focus-within {
+  border-color: var(--mc-brand);
+  box-shadow: 0 0 0 3px var(--mc-brand-ring);
+}
+
+.list-controls .search-bar .search-filter input {
+  font-size: 13px !important;
+  color: var(--mc-text) !important;
+  background: transparent !important;
+}
+
+.list-controls .search-bar .icon--search {
+  color: var(--mc-text-4);
+}
+
+/* Filter / column / sort pills in the toolbar */
+.list-controls .pill {
+  background: var(--mc-surface-2) !important;
+  border: 1px solid var(--mc-border-soft) !important;
+  color: var(--mc-text-2) !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+  padding: 4px 10px !important;
+  transition: all var(--mc-dur-fast) var(--mc-ease);
+}
+
+.list-controls .pill:hover {
+  background: var(--mc-surface-2) !important;
+  border-color: var(--mc-border) !important;
+  color: var(--mc-text) !important;
+  transform: translateY(-1px);
+}
+
+/* Where builder / advanced filter dropdowns */
+.where-builder,
+.column-selector,
+.sort-by-pill__dropdown {
+  background: var(--mc-surface-0) !important;
+  border: 1px solid var(--mc-border) !important;
+  border-radius: var(--mc-radius-lg) !important;
+  box-shadow: var(--mc-shadow-lg) !important;
+  padding: 12px !important;
+}
+
+/* ============================================================
+   Premium table
+   ============================================================ */
+.collection-list__tables .table-wrap {
+  border: 1px solid var(--mc-border-soft);
+  border-radius: var(--mc-radius-lg);
+  background: var(--mc-surface-0);
+  overflow: hidden;
+  box-shadow: var(--mc-shadow-soft);
+}
+
+.collection-list .table table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  background: transparent !important;
+}
+
+/* ----- Table head ----- */
+.collection-list .table thead {
+  color: var(--mc-text-3) !important;
+  background: var(--mc-surface-1);
+  border-bottom: 1px solid var(--mc-border-soft);
+}
+
+.collection-list .table thead th {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mc-text-4) !important;
+  padding: 12px 14px !important;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--mc-border-soft);
+  vertical-align: middle !important;
+}
+
+.collection-list .table thead th .sort-column {
+  color: var(--mc-text-4) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.06em;
+}
+
+.collection-list .table thead th .sort-column__buttons {
+  opacity: 0.6;
+  transition: opacity var(--mc-dur-fast) var(--mc-ease);
+}
+
+.collection-list .table thead th:hover .sort-column__buttons {
+  opacity: 1;
+}
+
+/* ----- Table body ----- */
+.collection-list .table tbody tr {
+  transition: background var(--mc-dur-fast) var(--mc-ease),
+              transform var(--mc-dur-fast) var(--mc-ease);
+  position: relative;
+}
+
+.collection-list .table tbody tr:hover {
+  background: var(--mc-surface-1) !important;
+}
+
+.collection-list .table tbody tr:hover td {
+  background: transparent !important;
+}
+
+.collection-list .table tbody td {
+  padding: 14px !important;
+  border-bottom: 1px solid var(--mc-border-soft) !important;
+  vertical-align: middle !important;
+  color: var(--mc-text-2) !important;
+  font-size: 13.5px !important;
+  background: transparent !important;
+  min-width: 120px;
+}
+
+.collection-list .table tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+.collection-list .table tbody td:first-child {
+  padding-left: 18px !important;
+}
+
+.collection-list .table tbody td:last-child {
+  padding-right: 18px !important;
+}
+
+/* First text cell (often the title link) — stronger weight */
+.collection-list .table tbody td a {
+  color: var(--mc-text) !important;
+  text-decoration: none !important;
+  font-weight: 500;
+  transition: color var(--mc-dur-fast) var(--mc-ease);
+}
+
+.collection-list .table tbody td a:hover {
+  color: var(--mc-brand) !important;
+}
+
+/* ----- Status / pill cells inside table ----- */
+.collection-list .table .pill {
+  font-size: 11px !important;
+  padding: 3px 9px !important;
+  border-radius: 999px !important;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+}
+
+/* Status field styling — colored badges */
+.collection-list .table td[class*='status'] .pill,
+.collection-list .table .cell-status .pill {
+  background: var(--mc-surface-2) !important;
+  color: var(--mc-text-2) !important;
+  border: 1px solid var(--mc-border-soft) !important;
+}
+
+/* ----- Checkboxes (bulk select) ----- */
+.collection-list .table .cell-_select {
+  padding-left: 18px !important;
+  padding-right: 0 !important;
+  width: 36px;
+  min-width: 36px;
+}
+
+.collection-list .table .cell-_select .checkbox-input {
+  border-radius: 5px !important;
+}
+
+/* ----- Drag handle cell ----- */
+.collection-list .table .cell-_dragHandle {
+  color: var(--mc-text-4) !important;
+  cursor: grab;
+}
+
+/* ----- Empty state polish ----- */
+.collection-list__no-results {
+  background: var(--mc-surface-0);
+  border: 1px dashed var(--mc-border) !important;
+  border-radius: var(--mc-radius-lg);
+  padding: 56px 24px !important;
+  text-align: center;
+  color: var(--mc-text-3);
+}
+
+/* ============================================================
+   Bulk selection floating bar
+   ============================================================ */
+.collection-list__list-selection {
+  position: fixed !important;
+  left: 50% !important;
+  bottom: 28px !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  max-width: calc(100vw - 64px);
+  padding: 10px 16px !important;
+  background: var(--mc-surface-1) !important;
+  border: 1px solid var(--mc-border) !important;
+  border-radius: 999px !important;
+  box-shadow: var(--mc-shadow-lg) !important;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  z-index: 30;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: mcBarSlideUp 220ms var(--mc-ease) both;
+}
+
+@keyframes mcBarSlideUp {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.collection-list__list-selection .btn {
+  margin: 0 !important;
+  background: var(--mc-surface-2) !important;
+  color: var(--mc-text-2) !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  border: 1px solid transparent !important;
+  transition: all var(--mc-dur-fast) var(--mc-ease);
+}
+
+.collection-list__list-selection .btn:hover {
+  background: var(--mc-surface-2) !important;
+  border-color: var(--mc-brand) !important;
+  color: var(--mc-text) !important;
+}
+
+.collection-list__list-selection-actions {
+  gap: 6px !important;
+}
+
+/* ============================================================
+   Pagination
+   ============================================================ */
+.paginator,
+.per-page,
+.page-info {
+  color: var(--mc-text-3) !important;
+  font-size: 13px !important;
+}
+
+.paginator .btn,
+.paginator button {
+  background: transparent !important;
+  border: 1px solid var(--mc-border-soft) !important;
+  border-radius: 8px !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  color: var(--mc-text-3) !important;
+  transition: all var(--mc-dur-fast) var(--mc-ease) !important;
+}
+
+.paginator .btn:hover,
+.paginator button:hover {
+  background: var(--mc-surface-2) !important;
+  border-color: var(--mc-border) !important;
+  color: var(--mc-text) !important;
+}
+
+.paginator .btn--active {
+  background: var(--mc-brand) !important;
+  border-color: var(--mc-brand) !important;
+  color: #fff !important;
+}
+
+/* ============================================================
+   List tabs (e.g. Folder view / Drafts / Published)
+   ============================================================ */
+.list-tabs,
+.default-list-view-tabs {
+  border-bottom: 1px solid var(--mc-border-soft) !important;
+  gap: 4px !important;
+  padding-bottom: 0 !important;
+}
+
+.list-tabs__tab,
+.default-list-view-tabs__tab {
+  padding: 8px 14px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--mc-text-3) !important;
+  border-radius: 8px 8px 0 0 !important;
+  border-bottom: 2px solid transparent !important;
+  transition: all var(--mc-dur-fast) var(--mc-ease);
+  position: relative;
+  top: 1px;
+}
+
+.list-tabs__tab:hover,
+.default-list-view-tabs__tab:hover {
+  color: var(--mc-text) !important;
+  background: var(--mc-surface-1) !important;
+}
+
+.list-tabs__tab--active,
+.default-list-view-tabs__tab--active {
+  color: var(--mc-text) !important;
+  border-bottom-color: var(--mc-brand) !important;
+  background: transparent !important;
+}
+
+/* ============================================================
+   Animate row appearance
+   ============================================================ */
+.collection-list .table tbody tr {
+  animation: mcRowFadeIn 200ms var(--mc-ease) both;
+}
+
+@keyframes mcRowFadeIn {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger the first few rows for visual delight */
+.collection-list .table tbody tr:nth-child(1) { animation-delay:   0ms; }
+.collection-list .table tbody tr:nth-child(2) { animation-delay:  30ms; }
+.collection-list .table tbody tr:nth-child(3) { animation-delay:  60ms; }
+.collection-list .table tbody tr:nth-child(4) { animation-delay:  90ms; }
+.collection-list .table tbody tr:nth-child(5) { animation-delay: 120ms; }
+.collection-list .table tbody tr:nth-child(6) { animation-delay: 150ms; }
+
+/* ============================================================
+   ============================================================
+   STEP 3 — Document Edit View
+   Split layout · floating save bar · Notion-style editor
+   ============================================================
+   ============================================================ */
+
+/* ----- Outer page padding ----- */
+.collection-edit,
+.global-edit,
+.document {
+  --mc-doc-pad: 0px;
+}
+
+/* ----- Doc controls (sticky save/publish bar at top) ----- */
+.doc-controls {
+  position: sticky !important;
+  top: var(--mc-topbar-h) !important;
+  z-index: 25 !important;
+  margin: 16px 28px 0 !important;
+  border: 1px solid var(--mc-border-soft);
+  border-radius: 14px;
+  /* IMPORTANT: do NOT use overflow:hidden here — it clips dropdowns from
+     the 3-dot menu and creates an unwanted stacking context. */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.20), 0 8px 24px rgba(0,0,0,0.18);
+  background: rgba(17, 21, 26, 0.78);
+  backdrop-filter: saturate(140%) blur(14px);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  pointer-events: auto !important;
+}
+
+/* Defensively re-enable pointer events on every descendant — Payload's
+   stock styles use `pointer-events: none` on some wrapper elements (e.g.
+   .array-field__row-header) which can cascade and surprise. */
+.doc-controls,
+.doc-controls * {
+  pointer-events: auto;
+}
+
+/* Neutralize Payload's stock pseudos which would otherwise sit on top
+   of our backdrop and (more importantly) capture pointer events. */
+.doc-controls::before,
+.doc-controls::after {
+  content: none !important;
+  display: none !important;
+}
+
+[data-theme='light'] .doc-controls {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.doc-controls__divider {
+  display: none !important;
+}
+
+.doc-controls__wrapper {
+  padding: 0 16px !important;
+  height: 52px !important;
+  gap: 12px !important;
+}
+
+.doc-controls__content {
+  padding: 0 !important;
+  gap: 10px !important;
+}
+
+.doc-controls__meta {
+  gap: 10px !important;
+  align-items: center !important;
+}
+
+.doc-controls__meta li {
+  color: var(--mc-text-3) !important;
+  font-size: 12px !important;
+}
+
+.doc-controls__meta button {
+  background: transparent !important;
+  border: 1px solid var(--mc-border-soft) !important;
+  border-radius: 6px !important;
+  padding: 3px 10px !important;
+  color: var(--mc-text-3) !important;
+  font-size: 12px !important;
+  transition: all var(--mc-dur-fast) var(--mc-ease);
+}
+
+.doc-controls__meta button:hover {
+  background: var(--mc-surface-2) !important;
+  border-color: var(--mc-border) !important;
+  color: var(--mc-text) !important;
+}
+
+/* Save / publish primary actions */
+.doc-controls .btn {
+  height: 32px !important;
+  padding: 0 14px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  margin: 0 !important;
+}
+
+.doc-controls .btn--style-primary {
+  background: var(--mc-brand) !important;
+  border-color: var(--mc-brand) !important;
+  color: #fff !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.doc-controls .btn--style-primary:hover {
+  background: var(--mc-brand-hover) !important;
+  border-color: var(--mc-brand-hover) !important;
+  box-shadow: var(--mc-shadow-glow);
+  transform: translateY(-1px);
+}
+
+.doc-controls .btn--style-secondary {
+  background: var(--mc-surface-2) !important;
+  border-color: var(--mc-border) !important;
+  color: var(--mc-text-2) !important;
+}
+
+/* Meta icons (3-dot menu, etc.) */
+.doc-controls__meta-icons {
+  gap: 4px !important;
+}
+
+.doc-controls__meta-icons button {
+  width: 32px !important;
+  height: 32px !important;
+  display: grid;
+  place-items: center;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  color: var(--mc-text-3) !important;
+  transition: all var(--mc-dur-fast) var(--mc-ease);
+}
+
+.doc-controls__meta-icons button:hover {
+  background: var(--mc-surface-2) !important;
+  border-color: var(--mc-border-soft) !important;
+  color: var(--mc-text) !important;
+}
+
+/* ----- Doc header (title area) ----- */
+.doc-header {
+  margin: 28px 28px 0 !important;
+  padding: 0 0 24px !important;
+}
+
+.doc-header::after {
+  background: var(--mc-border-soft) !important;
+  width: 100%;
+  left: 0;
+}
+
+.doc-header__title {
+  font-size: 30px !important;
+  line-height: 38px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.024em;
+  color: var(--mc-text) !important;
+}
+
+/* Breadcrumb / step nav above title */
+.doc-header__step-nav,
+.step-nav {
+  font-size: 12px !important;
+  color: var(--mc-text-4) !important;
+  margin-bottom: 6px !important;
+}
+
+.step-nav a {
+  color: var(--mc-text-3) !important;
+  text-decoration: none !important;
+  transition: color var(--mc-dur-fast) var(--mc-ease);
+}
+
+.step-nav a:hover {
+  color: var(--mc-brand) !important;
+}
+
+/* ============================================================
+   Split layout — main + sidebar
+   ============================================================ */
+.document-fields {
+  padding: 24px 28px 120px !important; /* leave room for floating save bar */
+  max-width: none !important;
+  --doc-sidebar-width: 320px !important;
+}
+
+.document-fields--has-sidebar {
+  --main-border: none !important;
+}
+
+/* Main edit column */
+.document-fields--has-sidebar .document-fields__edit {
+  padding: 0 24px 0 0 !important;
+  border-right: none !important;
+}
+
+.document-fields__fields {
+  background: var(--mc-surface-0);
+  border: 1px solid var(--mc-border-soft);
+  border-radius: var(--mc-radius-lg);
+  padding: 28px !important;
+  box-shadow: var(--mc-shadow-soft);
+}
+
+/* Sidebar column */
+.document-fields__sidebar-wrap {
+  top: calc(var(--mc-topbar-h) + 84px) !important; /* below topbar + doc-controls */
+  height: calc(100vh - var(--mc-topbar-h) - 100px) !important;
+}
+
+.document-fields__sidebar {
+  background: var(--mc-surface-0);
+  border: 1px solid var(--mc-border-soft);
+  border-radius: var(--mc-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--mc-shadow-soft);
+}
+
+.document-fields__sidebar-fields {
+  padding: 22px !important;
+  gap: 16px !important;
+}
+
+/* ----- Live preview mode: collapse split into single column -----
+   When the live preview iframe is on, the form area only gets ~40% of the
+   page width. Splitting that into main + 320px sidebar leaves nothing for
+   the actual fields. So stack vertically (main full width, sidebar below)
+   whenever live preview is active. */
+.document:has(.live-preview-window--is-live-previewing) .document-fields,
+.document:has(.live-preview-window--is-live-previewing) .document-fields--has-sidebar {
+  flex-direction: column !important;
+  padding: 16px 18px 120px !important;
+}
+
+.document:has(.live-preview-window--is-live-previewing) .document-fields--has-sidebar .document-fields__edit {
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+.document:has(.live-preview-window--is-live-previewing) .document-fields__main {
+  width: 100% !important;
+}
+
+.document:has(.live-preview-window--is-live-previewing) .document-fields__sidebar-wrap {
+  position: static !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  margin-top: 16px;
+}
+
+/* ============================================================
+   Tabs (Content / SEO / etc.)
+   ============================================================ */
+.tabs-field {
+  margin-bottom: 24px !important;
+}
+
+.tabs-field__tabs-wrap {
+  border-bottom: 1px solid var(--mc-border-soft) !important;
+  margin-bottom: 24px !important;
+  padding-bottom: 0 !important;
+}
+
+.tabs-field__tabs {
+  gap: 2px !important;
+  display: flex;
+}
+
+.tabs-field__tab-button {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+  padding: 0 14px 14px !important;
+  margin-inline-end: 0 !important;
+  color: var(--mc-text-3) !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+  position: relative;
+  transition: color var(--mc-dur-fast) var(--mc-ease);
+}
+
+.tabs-field__tab-button:hover {
+  color: var(--mc-text) !important;
+  background: transparent !important;
+}
+
+.tabs-field__tab-button::after {
+  background: var(--mc-brand) !important;
+  height: 2px !important;
+  border-radius: 2px 2px 0 0;
+  bottom: -1px !important;
+  opacity: 0 !important;
+  transition: opacity var(--mc-dur-fast) var(--mc-ease);
+}
+
+.tabs-field__tab-button--active {
+  color: var(--mc-text) !important;
+  font-weight: 600 !important;
+}
+
+.tabs-field__tab-button--active::after {
+  opacity: 1 !important;
+}
+
+/* ============================================================
+   Form field polish
+   ============================================================ */
+.field-type {
+  margin-bottom: 20px !important;
+}
+
+.render-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Field hover state — subtle highlight */
+.field-type__wrap {
+  border-radius: 8px;
+  transition: background var(--mc-dur-fast) var(--mc-ease);
+}
+
+/* Description text under labels */
+.field-description {
+  font-size: 12px !important;
+  color: var(--mc-text-4) !important;
+  margin-top: 4px !important;
+}
+
+/* Required asterisk */
+.required {
+  color: var(--mc-brand) !important;
+  margin-left: 2px;
+}
+
+/* Error state */
+.field-type--has-error input,
+.field-type--has-error textarea,
+.field-type--has-error .rs__control {
+  border-color: #ff6b6b !important;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2) !important;
+}
+
+.field-type--has-error .field-error {
+  color: #ff8585 !important;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* ----- Group / collapsible fields ----- */
+.group-field,
+.collapsible-field {
+  background: var(--mc-surface-1) !important;
+  border: 1px solid var(--mc-border-soft) !important;
+  border-radius: var(--mc-radius) !important;
+  overflow: hidden;
+}
+
+/* The VISIBLE row header — Payload uses `.collapsible__toggle-wrap` for this. */
+.collapsible__toggle-wrap {
+  padding: 12px 14px !important;
+  background: var(--mc-surface-2) !important;
+  color: var(--mc-text) !important;
+  font-weight: 600;
+  font-size: 13px;
+  transition: background var(--mc-dur-fast) var(--mc-ease);
+}
+
+.collapsible__toggle-wrap:not(.toggle-disabled):hover {
+  background: rgba(91, 140, 255, 0.08) !important;
+}
+
+/* Re-affirm the row label colour (overrides Payload's
+   "currentColor" inheritance once we change the wrap colour) */
+.collapsible__toggle-wrap .row-label {
+  color: var(--mc-text) !important;
+  font-weight: 600;
+}
+
+/* IMPORTANT: do NOT change color/font on `.collapsible__toggle` itself.
+   That element is an absolutely-positioned overlay used as a click target
+   for accessibility; its text is intentionally `color: transparent`.
+   Overriding it makes the hidden "Toggle block" label visible and
+   collide with the row label. */
+
+.collapsible__content {
+  padding: 16px 18px !important;
+  background: var(--mc-surface-1);
+}
+
+/* ----- Array / blocks fields ----- */
+.array-field__row,
+.blocks-field__row {
+  background: var(--mc-surface-1) !important;
+  border: 1px solid var(--mc-border-soft) !important;
+  border-radius: var(--mc-radius) !important;
+  margin-bottom: 12px !important;
+  overflow: hidden;
+  transition: border-color var(--mc-dur-fast) var(--mc-ease);
+}
+
+.array-field__row:hover,
+.blocks-field__row:hover {
+  border-color: var(--mc-border) !important;
+}
+
+/* Add row button */
+.array-field__add-button,
+.blocks-field__drawer-toggler {
+  background: transparent !important;
+  border: 1px dashed var(--mc-border) !important;
+  border-radius: 10px !important;
+  padding: 12px 18px !important;
+  color: var(--mc-text-3) !important;
+  font-weight: 500;
+  transition: all var(--mc-dur-fast) var(--mc-ease);
+}
+
+.array-field__add-button:hover,
+.blocks-field__drawer-toggler:hover {
+  border-color: var(--mc-brand) !important;
+  color: var(--mc-brand) !important;
+  background: var(--mc-brand-soft) !important;
+}
+
+/* ============================================================
+   Status / publish widget in sidebar
+   ============================================================ */
+.status,
+.document-fields__sidebar .field-type[class*='status'] {
+  background: var(--mc-surface-2);
+  border: 1px solid var(--mc-border-soft);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+/* ============================================================
+   Live preview toggler
+   ============================================================ */
+.live-preview-toggler {
+  background: transparent !important;
+  border: 1px solid var(--mc-border-soft) !important;
+  color: var(--mc-text-3) !important;
+  border-radius: 8px !important;
+  padding: 6px 10px !important;
+  font-size: 12px !important;
+  transition: all var(--mc-dur-fast) var(--mc-ease);
+}
+
+.live-preview-toggler:hover {
+  background: var(--mc-surface-2) !important;
+  border-color: var(--mc-border) !important;
+  color: var(--mc-text) !important;
+}
+
+/* ============================================================
+   Responsive: collapse split layout on smaller screens
+   ============================================================ */
+@media (max-width: 1024px) {
+  .document-fields {
+    padding: 16px 18px 120px !important;
+  }
+  .document-fields--has-sidebar {
+    --main-width: 100% !important;
+  }
+  .document-fields--has-sidebar .document-fields__edit {
+    padding: 0 !important;
+  }
+  .document-fields__sidebar-wrap {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    min-width: 0 !important;
+    margin-top: 20px;
+  }
+}
+
+/* ============================================================
+   Page-level edit animations
+   ============================================================ */
+.document-fields__fields,
+.document-fields__sidebar {
+  animation: mcFadeIn 240ms var(--mc-ease) both;
+}
+
+.document-fields__sidebar { animation-delay: 60ms; }
+
+@keyframes mcFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   ============================================================
+   STEP 4 — Rich Text Editor (Lexical)
+   Notion-style spacious editor · modern toolbar · slash menu
+   ============================================================
+   ============================================================ */
+
+/* ----- Editor outer container ----- */
+.field-type.rich-text {
+  margin-top: 8px !important;
+  margin-bottom: 24px !important;
+}
+
+.field-type.rich-text > .field-label {
+  margin-bottom: 10px !important;
+}
+
+.editor-container {
+  position: relative;
+  font-family: 'Inter', 'Geist', -apple-system, sans-serif !important;
+  font-size: 15.5px !important;
+  letter-spacing: -0.005em !important;
+  line-height: 1.65 !important;
+  background: var(--mc-surface-1) !important;
+  border: 1px solid var(--mc-border-soft) !important;
+  border-radius: var(--mc-radius-lg) !important;
+  overflow: hidden;
+  transition: border-color var(--mc-dur-fast) var(--mc-ease),
+              box-shadow var(--mc-dur-fast) var(--mc-ease);
+}
+
+.editor-container:focus-within {
+  border-color: var(--mc-border) !important;
+  box-shadow: 0 0 0 1px var(--mc-border-soft);
+}
+
+/* ----- Editor scroll area ----- */
+.editor-container > .editor-scroller {
+  background: transparent !important;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.editor-container > .editor-scroller > .editor {
+  color: var(--mc-text) !important;
+  animation: none !important;
+  background: transparent !important;
+}
+
+/* ----- Editable area — generous padding ----- */
+.editor-container > .editor-scroller > .editor > .ContentEditable__root {
+  padding: 32px 40px !important;
+  padding-left: calc(40px + 32px) !important; /* leave room for drag handle */
+  min-height: 280px;
+  outline: none !important;
+  color: var(--mc-text) !important;
+}
+
+/* The vertical guideline (Lexical adds it) — soften */
+.editor-container > .editor-scroller > .editor > .ContentEditable__root::before {
+  border-left: 1px solid var(--mc-border-soft) !important;
+  left: 40px !important;
+}
+
+.editor-container > .editor-scroller > .editor > .draggable-block-target-line {
+  background: var(--mc-brand) !important;
+  height: 2px;
+  border-radius: 999px;
+  left: calc(40px + 32px) !important;
+}
+
+/* Placeholder */
+.editor-container > .editor-scroller > .editor > div > .LexicalEditorTheme__placeholder {
+  color: var(--mc-text-4) !important;
+  font-size: 15.5px !important;
+  font-style: normal !important;
+  left: calc(40px + 32px) !important;
+  top: 32px !important;
+  pointer-events: none;
+}
+
+/* ----- Typography inside editor ----- */
+.editor-container .ContentEditable__root p,
+.editor-container .ContentEditable__root .LexicalEditorTheme__paragraph {
+  margin: 0 0 8px !important;
+  font-size: 15.5px !important;
+  line-height: 1.65 !important;
+  color: var(--mc-text-2) !important;
+}
+
+.editor-container .ContentEditable__root h1 {
+  font-size: 30px !important;
+  line-height: 1.25 !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.024em !important;
+  margin: 28px 0 12px !important;
+  color: var(--mc-text) !important;
+}
+
+.editor-container .ContentEditable__root h2 {
+  font-size: 24px !important;
+  line-height: 1.3 !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.018em !important;
+  margin: 24px 0 10px !important;
+  color: var(--mc-text) !important;
+}
+
+.editor-container .ContentEditable__root h3 {
+  font-size: 19px !important;
+  line-height: 1.35 !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.012em !important;
+  margin: 20px 0 8px !important;
+  color: var(--mc-text) !important;
+}
+
+.editor-container .ContentEditable__root h4 {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  margin: 16px 0 6px !important;
+  color: var(--mc-text) !important;
+}
+
+.editor-container .ContentEditable__root ul,
+.editor-container .ContentEditable__root ol {
+  padding-left: 22px !important;
+  margin: 8px 0 12px !important;
+}
+
+.editor-container .ContentEditable__root li {
+  margin: 4px 0 !important;
+}
+
+/* Blockquote — modern callout style */
+.editor-container .ContentEditable__root blockquote {
+  margin: 16px 0 !important;
+  padding: 10px 0 10px 16px !important;
+  border-left: 3px solid var(--mc-brand) !important;
+  color: var(--mc-text-2) !important;
+  font-style: normal;
+  background: var(--mc-brand-soft);
+  border-radius: 0 8px 8px 0;
+}
+
+/* Inline code */
+.editor-container .ContentEditable__root code {
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace !important;
+  font-size: 0.9em !important;
+  background: var(--mc-surface-2) !important;
+  color: #FFB36B !important;
+  border: 1px solid var(--mc-border-soft);
+  padding: 1px 6px !important;
+  border-radius: 5px !important;
+}
+
+/* Code block */
+.editor-container .ContentEditable__root pre,
+.editor-container .ContentEditable__root .LexicalEditorTheme__code {
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  background: #0A0E14 !important;
+  color: #E0E6F2 !important;
+  padding: 16px 18px !important;
+  border-radius: var(--mc-radius) !important;
+  border: 1px solid var(--mc-border-soft) !important;
+  margin: 14px 0 !important;
+  overflow-x: auto;
+}
+
+/* Links inside editor */
+.editor-container .ContentEditable__root a {
+  color: var(--mc-brand) !important;
+  text-decoration: underline;
+  text-decoration-color: rgba(91, 140, 255, 0.4);
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--mc-dur-fast) var(--mc-ease);
+}
+
+.editor-container .ContentEditable__root a:hover {
+  text-decoration-color: var(--mc-brand);
+}
+
+/* Horizontal rule */
+.editor-container .ContentEditable__root hr {
+  border: none;
+  height: 1px;
+  background: var(--mc-border-soft);
+  margin: 24px 0 !important;
+}
+
+/* Selection inside editor — brand tinted */
+.editor-container .ContentEditable__root ::selection {
+  background: var(--mc-brand-soft-2);
+}
+
+/* ============================================================
+   Inline toolbar (selection toolbar that floats above selection)
+   ============================================================ */
+.inline-toolbar-popup {
+  background: var(--mc-surface-0) !important;
+  border: 1px solid var(--mc-border) !important;
+  border-radius: 10px !important;
+  padding: 4px !important;
+  box-shadow: var(--mc-shadow-lg) !important;
+  backdrop-filter: blur(8px);
+  animation: mcToolFadeIn 160ms var(--mc-ease) forwards;
+}
+
+.inline-toolbar-popup .caret {
+  border-top-color: var(--mc-surface-0) !important;
+}
+
+.inline-toolbar-popup__group {
+  gap: 2px !important;
+}
+
+.inline-toolbar-popup__group .divider {
+  background-color: var(--mc-border-soft) !important;
+  margin: 0 4px !important;
+}
+
+.inline-toolbar-popup__group .icon {
+  color: var(--mc-text-2) !important;
+}
+
+@keyframes mcToolFadeIn {
+  from { opacity: 0; transform: translateY(4px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ============================================================
+   Toolbar buttons (shared across inline / floating)
+   ============================================================ */
+.toolbar-popup__button {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 7px !important;
+  color: var(--mc-text-2) !important;
+  transition: background var(--mc-dur-fast) var(--mc-ease),
+              color var(--mc-dur-fast) var(--mc-ease);
+}
+
+.toolbar-popup__button:hover:not(.disabled) {
+  background: var(--mc-surface-2) !important;
+  color: var(--mc-text) !important;
+}
+
+.toolbar-popup__button.active {
+  background: var(--mc-brand-soft) !important;
+  color: var(--mc-brand) !important;
+}
+
+.toolbar-popup__button.active:hover {
+  background: var(--mc-brand-soft-2) !important;
+}
+
+/* Dropdown trigger */
+.toolbar-popup__dropdown {
+  height: 30px !important;
+  border-radius: 7px !important;
+  padding: 0 8px !important;
+  color: var(--mc-text-2) !important;
+  transition: background var(--mc-dur-fast) var(--mc-ease);
+}
+
+.toolbar-popup__dropdown:hover:not([disabled]) {
+  background: var(--mc-surface-2) !important;
+  color: var(--mc-text) !important;
+}
+
+.toolbar-popup__dropdown-label {
+  color: var(--mc-text-2) !important;
+  font-size: 13px !important;
+  font-weight: 500;
+}
+
+.toolbar-popup__dropdown-caret::after {
+  border-color: var(--mc-text-3) !important;
+}
+
+/* Dropdown menu */
+.toolbar-popup__dropdown-items {
+  background: var(--mc-surface-0) !important;
+  border: 1px solid var(--mc-border) !important;
+  border-radius: 10px !important;
+  padding: 4px !important;
+  box-shadow: var(--mc-shadow-lg) !important;
+  min-width: 180px !important;
+  animation: mcToolFadeIn 160ms var(--mc-ease) forwards;
+}
+
+.toolbar-popup__dropdown-items .toolbar-popup__dropdown-item {
+  border-radius: 7px !important;
+  padding: 6px 10px !important;
+  height: 32px !important;
+  color: var(--mc-text-2) !important;
+  font-size: 13px !important;
+  transition: background var(--mc-dur-fast) var(--mc-ease),
+              color var(--mc-dur-fast) var(--mc-ease);
+}
+
+.toolbar-popup__dropdown-items .toolbar-popup__dropdown-item:hover {
+  background: var(--mc-surface-2) !important;
+  color: var(--mc-text) !important;
+}
+
+/* ============================================================
+   Slash command menu
+   ============================================================ */
+.slash-menu-popup {
+  background: var(--mc-surface-0) !important;
+  border: 1px solid var(--mc-border) !important;
+  border-radius: var(--mc-radius) !important;
+  box-shadow: var(--mc-shadow-lg) !important;
+  width: 260px !important;
+  max-height: 360px !important;
+  padding: 6px !important;
+  font-family: 'Inter', sans-serif !important;
+  animation: mcToolFadeIn 180ms var(--mc-ease) forwards;
+}
+
+.slash-menu-popup__group {
+  padding-bottom: 4px !important;
+}
+
+.slash-menu-popup__group:not(:first-child) {
+  border-top: 1px solid var(--mc-border-soft);
+  padding-top: 6px;
+  margin-top: 4px;
+}
+
+.slash-menu-popup__group-title {
+  padding: 6px 8px 4px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mc-text-4) !important;
+}
+
+.slash-menu-popup__item {
+  height: 34px !important;
+  padding: 0 10px !important;
+  border-radius: 8px !important;
+  color: var(--mc-text-2) !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  gap: 10px;
+  transition: background var(--mc-dur-fast) var(--mc-ease),
+              color var(--mc-dur-fast) var(--mc-ease);
+}
+
+.slash-menu-popup__item:hover,
+.slash-menu-popup__item--selected {
+  background: var(--mc-brand-soft) !important;
+  color: var(--mc-text) !important;
+}
+
+.slash-menu-popup__item--selected .icon {
+  color: var(--mc-brand) !important;
+}
+
+.slash-menu-popup__item .icon {
+  width: 18px;
+  height: 18px;
+  color: var(--mc-text-3) !important;
+  flex-shrink: 0;
+}
+
+.slash-menu-popup__item-text {
+  margin-left: 0 !important;
+}
+
+/* ============================================================
+   Draggable block handle (left of each block)
+   ============================================================ */
+.draggable-block-menu {
+  border-radius: 6px !important;
+  background: transparent !important;
+  width: 22px;
+  transition: background var(--mc-dur-fast) var(--mc-ease),
+              opacity var(--mc-dur-fast) var(--mc-ease);
+}
+
+.draggable-block-menu:hover {
+  background: var(--mc-surface-2) !important;
+}
+
+.draggable-block-menu .icon {
+  opacity: 0.45 !important;
+  transition: opacity var(--mc-dur-fast) var(--mc-ease);
+}
+
+.draggable-block-menu:hover .icon {
+  opacity: 0.85 !important;
+}
+
+/* ============================================================
+   Lexical block-level decorators (upload, relationship, blocks)
+   ============================================================ */
+.LexicalEditorTheme__block {
+  background: var(--mc-surface-2) !important;
+  border: 1px solid var(--mc-border-soft) !important;
+  border-radius: var(--mc-radius) !important;
+  padding: 14px !important;
+  margin-block: 12px !important;
+  transition: border-color var(--mc-dur-fast) var(--mc-ease);
+}
+
+.LexicalEditorTheme__block:hover {
+  border-color: var(--mc-border) !important;
+}
+
+.LexicalEditorTheme__block__header {
+  margin-bottom: 8px;
+}
+
+.LexicalEditorTheme__block__header h3 {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--mc-text-3) !important;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.LexicalEditorTheme__block__header-action {
+  color: var(--mc-text-3) !important;
+  transition: color var(--mc-dur-fast) var(--mc-ease);
+}
+
+.LexicalEditorTheme__block__header-action:hover {
+  color: var(--mc-text) !important;
+}
+
+/* Upload / image inside lexical */
+.LexicalEditorTheme__block[data-lexical-decorator='true'] img {
+  border-radius: var(--mc-radius);
+  border: 1px solid var(--mc-border-soft);
+  display: block;
+  max-width: 100%;
+}
+
+/* Relationship card */
+.lexical-relationship-block {
+  background: var(--mc-surface-1) !important;
+  border: 1px solid var(--mc-border-soft) !important;
+  border-radius: var(--mc-radius) !important;
+}
+
+/* ============================================================
+   Read-only / disabled state
+   ============================================================ */
+.editor-container.editor-container--read-only {
+  background: var(--mc-surface-0) !important;
+  opacity: 0.85;
+}
+
+/* ============================================================
+   Floating "view selector" (in headings of nested blocks)
+   ============================================================ */
+.lexical-view-selector__button {
+  color: var(--mc-text-3) !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+}
+
+.lexical-view-selector__button:hover {
+  background: var(--mc-surface-2) !important;
+  color: var(--mc-text) !important;
 }

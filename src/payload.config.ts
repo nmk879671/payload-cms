@@ -33,7 +33,10 @@ export default buildConfig({
     meta: {
       titleSuffix: ' — Winnie CMS',
     },
+    theme: 'dark',
     components: {
+      Nav: '/components/admin/Nav#default',
+      header: ['/components/admin/Topbar#default'],
       views: {
         dashboard: {
           Component: '/components/Dashboard#default',
