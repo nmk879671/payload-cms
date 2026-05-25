@@ -22,10 +22,24 @@ export async function seedTestUser(): Promise<void> {
     },
   })
 
+  // Find the admin role (seeded on Payload init) so the new user has one.
+  const adminRole = await payload.find({
+    collection: 'roles',
+    where: { key: { equals: 'admin' } },
+    limit: 1,
+  })
+  const adminRoleId = adminRole.docs[0]?.id
+  if (!adminRoleId) {
+    throw new Error('Admin role not seeded — start Payload at least once first.')
+  }
+
   // Create fresh test user
   await payload.create({
     collection: 'users',
-    data: testUser,
+    data: {
+      ...testUser,
+      role: adminRoleId,
+    },
   })
 }
 

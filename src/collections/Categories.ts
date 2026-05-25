@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, Where } from 'payload'
 import { canManageContent, canRead } from '../access/roles'
 
 export const Categories: CollectionConfig = {
@@ -38,13 +38,15 @@ export const Categories: CollectionConfig = {
         position: 'sidebar',
         description: 'Optional. Only top-level categories can be parents (max 2 levels).',
       },
-      filterOptions: ({ id }) => ({
-        and: [
-          { parent: { exists: false } },
-          ...(id ? [{ id: { not_equals: id } }] : []),
-        ],
-      }),
-      validate: async (value, { req, id }) => {
+      filterOptions: ({ id }) => {
+        const and: Where[] = [{ parent: { exists: false } }]
+        if (id) and.push({ id: { not_equals: id } })
+        return { and }
+      },
+      validate: async (
+        value: any,
+        { req, id }: { req: any; id?: string | number },
+      ) => {
         if (!value) return true
         if (id && value === id) return 'A category cannot be its own parent.'
         try {
