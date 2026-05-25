@@ -26,9 +26,15 @@ export type NavEntitySerializable = {
   label: string
 }
 
+export type NavSubgroupSerializable = {
+  label: string
+  entities: NavEntitySerializable[]
+}
+
 export type NavGroupSerializable = {
   label: string
   entities: NavEntitySerializable[]
+  subgroups: NavSubgroupSerializable[]
 }
 
 type Props = {
@@ -39,6 +45,8 @@ type Props = {
 
 const STORAGE_KEY_COLLAPSED = 'mc-nav-collapsed'
 const STORAGE_KEY_OPEN_GROUPS = 'mc-nav-open-groups'
+
+const subKey = (group: string, sub: string) => `${group}::${sub}`
 
 const isPathActive = (pathname: string, href: string) =>
   pathname === href ||
@@ -55,7 +63,12 @@ export const NavClient: React.FC<Props> = ({
   const [hydrated, setHydrated] = useState(false)
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const init: Record<string, boolean> = {}
-    groups.forEach((g) => (init[g.label] = true))
+    groups.forEach((g) => {
+      init[g.label] = true
+      g.subgroups?.forEach((sub) => {
+        init[subKey(g.label, sub.label)] = true
+      })
+    })
     return init
   })
   const [search, setSearch] = useState('')
@@ -87,8 +100,6 @@ export const NavClient: React.FC<Props> = ({
     document.body.classList.toggle('mc-nav-collapsed', collapsed)
   }, [collapsed, hydrated])
 
-  /* On first hydration, immediately sync the class so the grid width
-     doesn't briefly flash to its default before we apply the saved state. */
   useEffect(() => {
     if (hydrated) {
       document.body.classList.toggle('mc-nav-collapsed', collapsed)
@@ -129,16 +140,18 @@ export const NavClient: React.FC<Props> = ({
   const filteredGroups = useMemo(() => {
     if (!search.trim()) return groups
     const q = search.trim().toLowerCase()
+    const match = (e: NavEntitySerializable) =>
+      e.label.toLowerCase().includes(q) || e.slug.toLowerCase().includes(q)
+
     return groups
-      .map((g) => ({
-        ...g,
-        entities: g.entities.filter(
-          (e) =>
-            e.label.toLowerCase().includes(q) ||
-            e.slug.toLowerCase().includes(q),
-        ),
-      }))
-      .filter((g) => g.entities.length > 0)
+      .map((g) => {
+        const entities = g.entities.filter(match)
+        const subgroups = (g.subgroups || [])
+          .map((sub) => ({ ...sub, entities: sub.entities.filter(match) }))
+          .filter((sub) => sub.entities.length > 0)
+        return { ...g, entities, subgroups }
+      })
+      .filter((g) => g.entities.length > 0 || g.subgroups.length > 0)
   }, [groups, search])
 
   const toggleGroup = useCallback((label: string) => {
@@ -151,6 +164,26 @@ export const NavClient: React.FC<Props> = ({
     },
     [router],
   )
+
+  const renderEntity = (entity: NavEntitySerializable) => {
+    const href =
+      entity.type === 'collection'
+        ? `${adminRoute}/collections/${entity.slug}`
+        : `${adminRoute}/globals/${entity.slug}`
+    const active = isPathActive(pathname, href)
+    const Icon = iconForSlug(entity.slug)
+    return (
+      <NavLinkRow
+        key={entity.slug}
+        collapsed={collapsed}
+        href={href}
+        active={active}
+        icon={Icon}
+        label={entity.label}
+        onNavigate={() => onEntityClick(href)}
+      />
+    )
+  }
 
   return (
     <aside
@@ -252,23 +285,63 @@ export const NavClient: React.FC<Props> = ({
                     style={{ overflow: 'hidden' }}
                   >
                     <div className="mc-group__items">
-                      {group.entities.map((entity) => {
-                        const href =
-                          entity.type === 'collection'
-                            ? `${adminRoute}/collections/${entity.slug}`
-                            : `${adminRoute}/globals/${entity.slug}`
-                        const active = isPathActive(pathname, href)
-                        const Icon = iconForSlug(entity.slug)
+                      {/* Direct entities (no sub-group) */}
+                      {group.entities.map(renderEntity)}
+
+                      {/* Sub-groups */}
+                      {group.subgroups.map((sub) => {
+                        const sk = subKey(group.label, sub.label)
+                        const subOpen = openGroups[sk] ?? true
                         return (
-                          <NavLinkRow
-                            key={entity.slug}
-                            collapsed={collapsed}
-                            href={href}
-                            active={active}
-                            icon={Icon}
-                            label={entity.label}
-                            onNavigate={() => onEntityClick(href)}
-                          />
+                          <div key={sub.label} className="mc-subgroup">
+                            {!collapsed ? (
+                              <button
+                                type="button"
+                                className="mc-subgroup__header"
+                                onClick={() => toggleGroup(sk)}
+                                aria-expanded={subOpen}
+                              >
+                                <span className="mc-subgroup__header-label">
+                                  {sub.label}
+                                </span>
+                                <ChevronDown
+                                  size={11}
+                                  className={`mc-subgroup__header-chevron ${
+                                    subOpen ? 'is-open' : ''
+                                  }`}
+                                />
+                              </button>
+                            ) : (
+                              <div
+                                className="mc-subgroup__divider"
+                                title={sub.label}
+                                aria-hidden
+                              />
+                            )}
+                            <AnimatePresence initial={false}>
+                              {(subOpen || collapsed) && (
+                                <motion.div
+                                  key="sub-content"
+                                  initial={
+                                    collapsed
+                                      ? false
+                                      : { height: 0, opacity: 0 }
+                                  }
+                                  animate={{ height: 'auto', opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{
+                                    duration: 0.2,
+                                    ease: [0.22, 1, 0.36, 1],
+                                  }}
+                                  style={{ overflow: 'hidden' }}
+                                >
+                                  <div className="mc-subgroup__items">
+                                    {sub.entities.map(renderEntity)}
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
                         )
                       })}
                     </div>

@@ -261,6 +261,21 @@ h1 { letter-spacing: -0.024em; font-weight: 700; }
   outline: none !important;
 }
 
+/* Hide the empty react-select input so it doesn't draw a thin vertical
+   line next to the placeholder. We key off `data-value=""` on the input
+   container — react-select updates this attribute as the user types, so:
+     - no typing → opacity:0 → line invisible
+     - user types → opacity:1 → typed text visible for filtering
+   Caret-color stays transparent always; even while typing the cursor
+   stays hidden but the text shows. */
+html body .react-select .rs__input-container[data-value=""] input.rs__input {
+  opacity: 0 !important;
+}
+
+html body .react-select input.rs__input {
+  caret-color: transparent !important;
+}
+
 .field-type input::placeholder,
 .field-type textarea::placeholder {
   color: var(--mc-text-4) !important;
@@ -788,7 +803,15 @@ h1 { letter-spacing: -0.024em; font-weight: 700; }
   position: sticky !important;
   top: var(--mc-topbar-h) !important;
   z-index: 25 !important;
-  margin: 16px 28px 0 !important;
+  /* Use inset positioning instead of margin so the bar can never exceed
+     its container's content box (which previously caused a slight overflow
+     past the right sidebar's outer edge). */
+  margin: 16px 0 0 !important;
+  width: calc(100% - 56px) !important;
+  margin-left: 28px !important;
+  margin-right: 28px !important;
+  box-sizing: border-box !important;
+  max-width: calc(100% - 56px) !important;
   border: 1px solid var(--mc-border-soft);
   border-radius: 14px;
   /* IMPORTANT: do NOT use overflow:hidden here — it clips dropdowns from
@@ -979,22 +1002,42 @@ h1 { letter-spacing: -0.024em; font-weight: 700; }
   box-shadow: var(--mc-shadow-soft);
 }
 
-/* Sidebar column */
+/* Sidebar column
+   - Sticky so Status / Save stays in reach as you scroll the main column
+   - Height is auto: card matches its actual content (no empty bottom space)
+   - Capped at viewport with max-height so a very long sidebar scrolls
+     internally instead of pushing the page taller than the viewport
+*/
 .document-fields__sidebar-wrap {
   top: calc(var(--mc-topbar-h) + 84px) !important; /* below topbar + doc-controls */
-  height: calc(100vh - var(--mc-topbar-h) - 100px) !important;
+  height: auto !important;
+  max-height: calc(100vh - var(--mc-topbar-h) - 100px) !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 .document-fields__sidebar {
   background: var(--mc-surface-0);
   border: 1px solid var(--mc-border-soft);
   border-radius: var(--mc-radius-lg);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: visible;
   box-shadow: var(--mc-shadow-soft);
+  /* Smooth scrollbar styling for when content overflows */
+  scrollbar-width: thin;
+  scrollbar-color: var(--mc-border) transparent;
+}
+
+.document-fields__sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.document-fields__sidebar::-webkit-scrollbar-thumb {
+  background: var(--mc-border);
+  border-radius: 999px;
 }
 
 .document-fields__sidebar-fields {
-  padding: 22px !important;
+  padding: 24px 22px 36px !important;
   gap: 16px !important;
 }
 

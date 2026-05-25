@@ -7,6 +7,10 @@ export const Roles: CollectionConfig = {
     useAsTitle: 'name',
     defaultColumns: ['name', 'key', 'description'],
     group: 'Admin',
+    custom: {
+      subGroup: 'Access',
+      subGroupOrder: 1,
+    },
   },
   access: {
     read: canRead,

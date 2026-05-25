@@ -7,6 +7,10 @@ export const Categories: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', 'parent', 'updatedAt'],
     group: 'Content',
+    custom: {
+      subGroup: 'Taxonomy',
+      subGroupOrder: 1,
+    },
   },
   access: {
     read: canRead,

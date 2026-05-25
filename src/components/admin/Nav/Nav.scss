@@ -243,6 +243,79 @@
 }
 
 /* ============================================================
+   Sub-group (second level inside a group)
+   ============================================================ */
+.mc-subgroup {
+  display: flex;
+  flex-direction: column;
+  margin-top: 6px;
+  padding-left: 6px;
+  border-left: 1px dashed var(--mc-border-soft);
+  margin-left: 10px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 4px 8px;
+    margin-bottom: 2px;
+    background: transparent;
+    border: none;
+    color: var(--mc-text-3);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: color var(--mc-dur-fast) var(--mc-ease),
+                background var(--mc-dur-fast) var(--mc-ease);
+
+    &:hover {
+      color: var(--mc-text-2);
+      background: var(--mc-surface-1);
+    }
+
+    &-label {
+      flex: 1;
+      text-align: left;
+    }
+
+    &-chevron {
+      transition: transform var(--mc-dur) var(--mc-ease);
+      opacity: 0.55;
+
+      &.is-open {
+        transform: rotate(0deg);
+      }
+      &:not(.is-open) {
+        transform: rotate(-90deg);
+      }
+    }
+  }
+
+  &__divider {
+    height: 1px;
+    background: var(--mc-border-soft);
+    margin: 6px 0;
+    opacity: 0.6;
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
+/* Subgroup indentation disappears in collapsed mode */
+.mc-sidebar--collapsed .mc-subgroup {
+  border-left: none;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+/* ============================================================
    Nav link row
    ============================================================ */
 .mc-link {
