@@ -97,7 +97,116 @@
       border-color: var(--mc-border);
       color: var(--mc-text);
     }
+
+    svg {
+      transition: transform var(--mc-dur-fast) var(--mc-ease);
+    }
+
+    &.is-open {
+      background: var(--mc-surface-2);
+      border-color: var(--mc-border);
+      color: var(--mc-text);
+
+      svg {
+        transform: rotate(180deg);
+      }
+    }
   }
+}
+
+/* ============================================================
+   Brand quick-menu (opens from chevron in brand area)
+   ============================================================ */
+.mc-sidebar__brand-menu {
+  position: absolute;
+  top: calc(100% - 6px);
+  left: var(--mc-pad-x);
+  right: var(--mc-pad-x);
+  z-index: 20;
+  padding: 6px;
+  background: var(--mc-surface-1);
+  border: 1px solid var(--mc-border);
+  border-radius: 10px;
+  box-shadow: var(--mc-shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: mcBrandMenuIn 160ms var(--mc-ease) both;
+}
+
+@keyframes mcBrandMenuIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.mc-sidebar__brand-menu-label {
+  padding: 6px 8px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mc-text-4);
+}
+
+.mc-sidebar__brand-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  background: transparent;
+  border: none;
+  color: var(--mc-text-2);
+  font-size: 13px;
+  font-family: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  width: 100%;
+  transition: background var(--mc-dur-fast) var(--mc-ease),
+              color var(--mc-dur-fast) var(--mc-ease);
+
+  &:hover {
+    background: var(--mc-surface-2);
+    color: var(--mc-text);
+  }
+
+  svg {
+    color: var(--mc-text-3);
+    flex-shrink: 0;
+  }
+
+  &--danger {
+    color: #FF8585;
+
+    svg { color: #FF8585; }
+
+    &:hover {
+      background: rgba(255, 107, 107, 0.10);
+      color: #FF6B6B;
+    }
+  }
+}
+
+.mc-sidebar__brand-menu-item-label {
+  flex: 1;
+}
+
+.mc-sidebar__brand-menu-item-meta {
+  font-size: 10px;
+  color: var(--mc-text-4);
+  font-style: italic;
+}
+
+.mc-sidebar__brand-menu-divider {
+  height: 1px;
+  background: var(--mc-border-soft);
+  margin: 4px 0;
+}
+
+/* Brand area needs position:relative for the absolute menu */
+.mc-sidebar__brand {
+  position: relative;
 }
 
 /* ============================================================
@@ -493,9 +602,11 @@
 }
 
 /* ============================================================
-   Responsive: mobile (Payload toggles .nav--menu-open)
+   Responsive: mobile drawer below 768px (Payload's own drawer handles
+   this — we just make sure the sidebar renders at full width, not the
+   collapsed 72px variant, when shown as a slide-in.)
    ============================================================ */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .mc-sidebar {
     width: var(--mc-sidebar-w) !important;
   }
@@ -503,4 +614,11 @@
   .mc-sidebar--collapsed {
     width: var(--mc-sidebar-w) !important;
   }
+}
+
+/* Defensive: backdrop element should never render anywhere — NavClient
+   still includes it in JSX, but we never show it visually since we
+   don't run the custom drawer. */
+.mc-sidebar__backdrop {
+  display: none !important;
 }

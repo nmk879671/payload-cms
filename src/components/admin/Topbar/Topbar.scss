@@ -63,7 +63,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .mc-topbar__menu {
     display: grid;
   }
@@ -362,6 +362,10 @@
   font-size: 13px;
   text-decoration: none;
   cursor: pointer;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-family: inherit;
   transition: background var(--mc-dur-fast) var(--mc-ease),
               color var(--mc-dur-fast) var(--mc-ease);
 
@@ -384,5 +388,55 @@
       background: rgba(255, 107, 107, 0.10);
       color: #FF6B6B;
     }
+  }
+
+  &.is-active {
+    background: var(--mc-brand-soft);
+    color: var(--mc-text);
+
+    svg { color: var(--mc-brand); }
+  }
+}
+
+/* Item with a meta tag on the right (e.g. locale code) */
+.mc-topbar__dropdown-item-label {
+  flex: 1;
+}
+
+.mc-topbar__dropdown-item-meta {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--mc-text-4);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--mc-surface-2);
+}
+
+.is-active .mc-topbar__dropdown-item-meta {
+  background: var(--mc-brand-soft-2);
+  color: var(--mc-brand);
+}
+
+/* ---- Locale switcher button (in right cluster) ---- */
+.mc-topbar__btn--locale {
+  padding: 0 10px !important;
+  gap: 6px;
+  font-weight: 500;
+
+  .mc-topbar__locale-code {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--mc-text-2);
+  }
+
+  svg {
+    color: var(--mc-text-3);
+  }
+
+  &:hover .mc-topbar__locale-code {
+    color: var(--mc-text);
   }
 }

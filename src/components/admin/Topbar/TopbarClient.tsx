@@ -2,7 +2,9 @@
 
 import {
   Bell,
+  ChevronDown,
   Command,
+  Globe,
   LogOut,
   Menu,
   Moon,
@@ -11,24 +13,27 @@ import {
   Sun,
   User as UserIcon,
 } from 'lucide-react'
-import { useConfig, useNav, useTheme, useTranslation } from '@payloadcms/ui'
+import { useConfig, useLocale, useNav, useTheme, useTranslation } from '@payloadcms/ui'
 import { getTranslation } from '@payloadcms/translations'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 
 type Props = {
   userLabel: string
 }
 
-type DropdownKey = 'new' | 'user' | null
+type DropdownKey = 'new' | 'user' | 'locale' | null
 
 export const TopbarClient: React.FC<Props> = ({ userLabel }) => {
   const { theme, setTheme } = useTheme()
   const { navOpen, setNavOpen } = useNav()
   const { config } = useConfig()
   const { i18n } = useTranslation()
+  const currentLocale = useLocale() as { code: string; label?: string } | undefined
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   const [mounted, setMounted] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -37,6 +42,7 @@ export const TopbarClient: React.FC<Props> = ({ userLabel }) => {
   const searchRef = useRef<HTMLInputElement>(null)
   const newRef = useRef<HTMLDivElement>(null)
   const userRef = useRef<HTMLDivElement>(null)
+  const localeRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => setMounted(true), [])
 
@@ -64,9 +70,14 @@ export const TopbarClient: React.FC<Props> = ({ userLabel }) => {
   /* Click outside closes the open menu */
   useEffect(() => {
     if (!openMenu) return
+    const refs: Record<Exclude<DropdownKey, null>, HTMLDivElement | null> = {
+      new: newRef.current,
+      user: userRef.current,
+      locale: localeRef.current,
+    }
+    const ref = refs[openMenu]
     const onDoc = (e: MouseEvent) => {
       const target = e.target as Node
-      const ref = openMenu === 'new' ? newRef.current : userRef.current
       if (ref && !ref.contains(target)) setOpenMenu(null)
     }
     document.addEventListener('mousedown', onDoc)
@@ -107,6 +118,31 @@ export const TopbarClient: React.FC<Props> = ({ userLabel }) => {
        list with the search term applied. */
     const first = createOptions[0]?.slug
     if (first) router.push(`${adminRoute}/collections/${first}?search=${encodeURIComponent(v)}`)
+  }
+
+  /* ---- Content locales (from config.localization) ---- */
+  const rawLocales = (config as any)?.localization?.locales
+  const contentLocales: { code: string; label: string }[] = Array.isArray(rawLocales)
+    ? rawLocales.map((l: any) =>
+        typeof l === 'string'
+          ? { code: l, label: l }
+          : { code: l.code, label: typeof l.label === 'string' ? l.label : l.code },
+      )
+    : []
+  const hasLocales = contentLocales.length > 1
+  const activeLocaleCode = currentLocale?.code || contentLocales[0]?.code || 'en'
+  const activeLocale =
+    contentLocales.find((l) => l.code === activeLocaleCode) || contentLocales[0]
+
+  const switchLocale = (code: string) => {
+    if (code === activeLocaleCode) {
+      setOpenMenu(null)
+      return
+    }
+    const params = new URLSearchParams(searchParams?.toString() || '')
+    params.set('locale', code)
+    router.push(`${pathname}?${params.toString()}`)
+    setOpenMenu(null)
   }
 
   return (
@@ -178,6 +214,46 @@ export const TopbarClient: React.FC<Props> = ({ userLabel }) => {
             </div>
           )}
         </div>
+
+        {/* ---- Content locale switcher ---- */}
+        {hasLocales && (
+          <div className="mc-topbar__menu-anchor" ref={localeRef}>
+            <button
+              type="button"
+              className="mc-topbar__btn mc-topbar__btn--locale"
+              title="Switch content locale"
+              onClick={() => toggleMenu('locale')}
+              aria-haspopup="menu"
+              aria-expanded={openMenu === 'locale'}
+            >
+              <Globe size={14} strokeWidth={2} />
+              <span className="mc-topbar__locale-code">
+                {activeLocaleCode.toUpperCase()}
+              </span>
+              <ChevronDown size={12} strokeWidth={2.5} />
+            </button>
+            {openMenu === 'locale' && (
+              <div className="mc-topbar__dropdown mc-topbar__dropdown--right" role="menu">
+                <div className="mc-topbar__dropdown-label">Content locale</div>
+                {contentLocales.map((l) => (
+                  <button
+                    key={l.code}
+                    type="button"
+                    className={`mc-topbar__dropdown-item ${
+                      l.code === activeLocaleCode ? 'is-active' : ''
+                    }`}
+                    onClick={() => switchLocale(l.code)}
+                    role="menuitem"
+                  >
+                    <Globe size={13} strokeWidth={2} />
+                    <span className="mc-topbar__dropdown-item-label">{l.label}</span>
+                    <span className="mc-topbar__dropdown-item-meta">{l.code}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* ---- Notifications (placeholder, no system wired) ---- */}
         <button

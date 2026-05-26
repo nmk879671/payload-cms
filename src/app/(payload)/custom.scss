@@ -937,10 +937,12 @@ html body .react-select input.rs__input {
   color: var(--mc-text) !important;
 }
 
-/* ----- Doc header (title area) ----- */
+/* ----- Doc header (title area) -----
+   Note: right padding gives the tabs a visual buffer from the viewport
+   edge. Without it, API gets visually cut on hi-DPI/sub-pixel rounding. */
 .doc-header {
   margin: 28px 28px 0 !important;
-  padding: 0 0 24px !important;
+  padding: 0 16px 24px 0 !important;
 }
 
 .doc-header::after {
@@ -973,6 +975,125 @@ html body .react-select input.rs__input {
 
 .step-nav a:hover {
   color: var(--mc-brand) !important;
+}
+
+/* ----- Doc tabs (Edit / Versions / API) -----
+   Wrapper chain: .doc-header__header → .doc-tabs → .doc-tabs__tabs-container
+   → ul.doc-tabs__tabs → individual <a>/<div> items.
+
+   Two things conspired to clip the API tab:
+   1. The UL inherits browser defaults (40px left padding, 16px margin),
+      shifting Payload's flex math off by ~40px.
+   2. The container chain has `overflow: hidden` somewhere, so the last
+      tab that pokes past the container's right edge gets cut.
+
+   Reset all four levels: clear UL chrome, force flex behavior on the
+   outer header so title and tabs allocate space sensibly, and force
+   `overflow: visible` so nothing inside gets clipped. */
+/* Side-by-side: title left, tabs right. The trick that makes API survive
+   is `flex: 1 1 0` on the title — flex-basis 0 means the title has zero
+   preferred width, so flexbox allocates space to the tabs FIRST (their
+   natural width via `flex: 0 0 auto`) and the title takes whatever's
+   left, truncating with ellipsis if the page title is very long. */
+.doc-header__header {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  flex-wrap: nowrap !important;
+  overflow: visible !important;
+}
+
+.doc-header__title {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.doc-tabs,
+.doc-tabs__tabs-container,
+.doc-tabs__tabs {
+  flex: 0 0 auto !important;
+  overflow: visible !important;
+  max-width: none !important;
+  width: auto !important;
+  position: static !important;  /* override any Payload absolute positioning */
+  right: auto !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+}
+
+/* Payload stock CSS at min-width:1024 sets .doc-tabs to absolute/right:0,
+   which makes the API tab butt against the viewport edge regardless of
+   the parent's padding. Crush that positioning at every desktop width. */
+@media (min-width: 1024px) {
+  .doc-tabs,
+  .doc-tabs__tabs-container,
+  .doc-tabs__tabs {
+    position: static !important;
+    right: auto !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+  }
+
+  .doc-header__header {
+    padding-right: 16px !important;
+  }
+}
+
+/* Small breathing room on the last tab so it never butts against the viewport */
+.doc-tabs__tabs > *:last-child {
+  margin-right: 4px !important;
+}
+
+.doc-tabs__tabs {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  gap: 4px !important;
+}
+
+.doc-tab,
+.doc-tab__label {
+  white-space: nowrap !important;
+}
+
+/* ----- Persistent sidebar at tablet/desktop widths (>=768px) -----
+   Force the grid column open and nav visible. Payload defaults try to
+   drawer-ize between roughly 768-1440px which made our custom sidebar
+   disappear; this override keeps it on at all desktop/tablet widths.
+
+   `minmax(0, 1fr)` on the content column (not plain `1fr`) is critical:
+   plain `1fr` has min-width: auto, so any wide form/table inside makes
+   the column overflow past viewport, pushing the doc-header's tabs out
+   of view. `minmax(0, ...)` lets the column shrink to fit, content
+   overflows internally instead. */
+@media (min-width: 768px) {
+  .template-default {
+    grid-template-columns: var(--nav-width) minmax(0, 1fr) !important;
+  }
+
+  .template-default__wrap {
+    min-width: 0 !important;
+  }
+
+  .nav,
+  .nav__wrap {
+    transform: none !important;
+    position: relative !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .mc-sidebar {
+    display: flex !important;
+  }
 }
 
 /* ============================================================
@@ -1045,28 +1166,107 @@ html body .react-select input.rs__input {
    When the live preview iframe is on, the form area only gets ~40% of the
    page width. Splitting that into main + 320px sidebar leaves nothing for
    the actual fields. So stack vertically (main full width, sidebar below)
-   whenever live preview is active. */
-.document:has(.live-preview-window--is-live-previewing) .document-fields,
-.document:has(.live-preview-window--is-live-previewing) .document-fields--has-sidebar {
+   whenever live preview is active.
+
+   Selector note: Payload 3 puts the `--is-live-previewing` modifier on the
+   `.collection-edit` / `.global-edit` wrapper (NOT on a `.document` parent).
+   We target both forms so collections and globals get the same treatment.
+
+   Why each override matters:
+   - `--doc-sidebar-width: 100%`  → Payload uses this var to size the sidebar
+     column. Without overriding it, the inner sidebar stays at 320px even
+     when the wrap is 100%, producing visibly mismatched widths.
+   - `max-width`/`min-width`/`flex` on both edit & sidebar-wrap → kills any
+     residual flex-basis or width constraint from Payload's stock styles.
+   - `.document-fields__sidebar { max-height: none; overflow: visible }`
+     → removes the sticky-mode height cap so the card flows naturally and
+     doesn't get an internal scrollbar.
+   - `box-sizing: border-box` on the parent → guarantees inner padding is
+     included in the 100% width, so children align with the parent edge. */
+.collection-edit--is-live-previewing .document-fields,
+.global-edit--is-live-previewing .document-fields,
+.collection-edit--is-live-previewing .document-fields--has-sidebar,
+.global-edit--is-live-previewing .document-fields--has-sidebar {
   flex-direction: column !important;
   padding: 16px 18px 120px !important;
+  --doc-sidebar-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
-.document:has(.live-preview-window--is-live-previewing) .document-fields--has-sidebar .document-fields__edit {
+.collection-edit--is-live-previewing .document-fields--has-sidebar .document-fields__edit,
+.global-edit--is-live-previewing .document-fields--has-sidebar .document-fields__edit {
   padding: 0 !important;
   width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  flex: 0 0 auto !important;
+  box-sizing: border-box !important;
 }
 
-.document:has(.live-preview-window--is-live-previewing) .document-fields__main {
+.collection-edit--is-live-previewing .document-fields__main,
+.global-edit--is-live-previewing .document-fields__main {
   width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
-.document:has(.live-preview-window--is-live-previewing) .document-fields__sidebar-wrap {
+.collection-edit--is-live-previewing .document-fields__sidebar-wrap,
+.global-edit--is-live-previewing .document-fields__sidebar-wrap {
   position: static !important;
   width: 100% !important;
+  max-width: 100% !important;
   min-width: 0 !important;
+  flex: 0 0 auto !important;
   height: auto !important;
-  margin-top: 16px;
+  max-height: none !important;
+  margin-top: 16px !important;
+  box-sizing: border-box !important;
+}
+
+.collection-edit--is-live-previewing .document-fields__sidebar,
+.global-edit--is-live-previewing .document-fields__sidebar {
+  width: 100% !important;
+  max-width: 100% !important;
+  max-height: none !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+/* ----- doc-controls on mobile / narrow screens -----
+   Two issues this block fixes:
+   1. The meta text (Last Modified / Created) wraps to multiple lines on
+      narrow widths and overflows the fixed 52px wrapper height, bleeding
+      visibly above/below the white card. Hide it on all mobile widths.
+   2. The 28px side margins are too wide on narrow phones, leaving a tiny
+      central column for the Save button. Tighten to 12px.
+   Live preview gets edge-to-edge instead, so the bar aligns with the
+   preview-toolbar below it without a stepped offset. */
+@media (max-width: 768px) {
+  .doc-controls {
+    width: calc(100% - 24px) !important;
+    max-width: calc(100% - 24px) !important;
+    margin-left: 12px !important;
+    margin-right: 12px !important;
+  }
+
+  .doc-controls__wrapper {
+    padding: 0 12px !important;
+    gap: 8px !important;
+  }
+
+  .doc-controls__meta {
+    display: none !important;
+  }
+
+  .collection-edit--is-live-previewing .doc-controls,
+  .global-edit--is-live-previewing .doc-controls {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
 }
 
 /* ============================================================
@@ -1226,10 +1426,42 @@ html body .react-select input.rs__input {
   border-color: var(--mc-border) !important;
 }
 
+/* Block row's "Untitled / name" input — Payload's stock styles strip all
+   padding, so the placeholder visually touches the left edge. Give it
+   normal field padding and a subtle hover/focus state that matches the
+   rest of the form. */
+.section-title__input {
+  padding: 4px 10px !important;
+  border-radius: var(--mc-radius-sm) !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: var(--mc-text) !important;
+  transition: background var(--mc-dur-fast) var(--mc-ease),
+              border-color var(--mc-dur-fast) var(--mc-ease),
+              box-shadow var(--mc-dur-fast) var(--mc-ease);
+}
+
+.section-title__input::placeholder {
+  color: var(--mc-text-4) !important;
+}
+
+.section-title__input:hover {
+  background: var(--mc-surface-1) !important;
+  border-color: var(--mc-border-soft) !important;
+}
+
+.section-title__input:focus {
+  background: var(--mc-surface-1) !important;
+  border-color: var(--mc-brand) !important;
+  box-shadow: 0 0 0 3px var(--mc-brand-ring) !important;
+  outline: none !important;
+}
+
 /* Add row button */
 .array-field__add-button,
 .blocks-field__drawer-toggler {
   background: transparent !important;
+  width: 100% !important;
   border: 1px dashed var(--mc-border) !important;
   border-radius: 10px !important;
   padding: 12px 18px !important;

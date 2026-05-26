@@ -4,8 +4,13 @@ import {
   ChevronDown,
   ChevronsLeft,
   ChevronsRight,
+  LogOut,
+  Moon,
   Search,
+  Settings,
   Sparkles,
+  Sun,
+  User as UserIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -17,6 +22,7 @@ import React, {
   useState,
 } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useNav, useTheme } from '@payloadcms/ui'
 
 import { dashboardIcon, iconForGroup, iconForSlug } from './iconMap'
 
@@ -59,7 +65,12 @@ export const NavClient: React.FC<Props> = ({
 }) => {
   const pathname = usePathname() || '/admin'
   const router = useRouter()
+  const { navOpen, setNavOpen } = useNav()
+  const { theme, setTheme } = useTheme()
   const [collapsed, setCollapsed] = useState(false)
+  const [brandMenuOpen, setBrandMenuOpen] = useState(false)
+  const [themeMounted, setThemeMounted] = useState(false)
+  const brandRef = useRef<HTMLDivElement>(null)
   const [hydrated, setHydrated] = useState(false)
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const init: Record<string, boolean> = {}
@@ -72,7 +83,19 @@ export const NavClient: React.FC<Props> = ({
     return init
   })
   const [search, setSearch] = useState('')
+  const [isMac, setIsMac] = useState(true)
   const searchRef = useRef<HTMLInputElement>(null)
+
+  /* OS detection for keyboard shortcut hint (⌘ on macOS, Ctrl elsewhere).
+     Defaults to mac so SSR + first-paint shows ⌘; corrected on mount. */
+  useEffect(() => {
+    if (typeof navigator !== 'undefined') {
+      setIsMac(/Mac|iPod|iPhone|iPad/.test(navigator.platform))
+    }
+  }, [])
+
+  const modKey = isMac ? '⌘' : 'Ctrl'
+  const modKeyDisplay = isMac ? '⌘' : 'Ctrl+'
 
   /* ---- persistence ---- */
   useEffect(() => {
@@ -161,9 +184,59 @@ export const NavClient: React.FC<Props> = ({
   const onEntityClick = useCallback(
     (href: string) => {
       router.push(href)
+      setNavOpen(false)
     },
-    [router],
+    [router, setNavOpen],
   )
+
+  /* Auto-close drawer when route changes (clicking links inside subgroups,
+     dashboard pin, etc — those don't go through onEntityClick). */
+  useEffect(() => {
+    setNavOpen(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname])
+
+  /* Esc closes the drawer on narrow viewports. */
+  useEffect(() => {
+    if (!navOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setNavOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [navOpen, setNavOpen])
+
+  /* Brand quick-menu: click outside / Esc closes */
+  useEffect(() => {
+    if (!brandMenuOpen) return
+    const onDoc = (e: MouseEvent) => {
+      const target = e.target as Node
+      if (brandRef.current && !brandRef.current.contains(target)) {
+        setBrandMenuOpen(false)
+      }
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setBrandMenuOpen(false)
+    }
+    document.addEventListener('mousedown', onDoc)
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDoc)
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [brandMenuOpen])
+
+  /* Mark theme as mounted so we render the correct icon (avoids
+     hydration-mismatch where SSR doesn't know user's saved theme). */
+  useEffect(() => setThemeMounted(true), [])
+
+  const accountHref = `${adminRoute}/account`
+  const logoutHref = `${adminRoute}/logout`
+
+  const toggleTheme = () => {
+    if (!themeMounted) return
+    setTheme(theme === 'dark' ? 'light' : 'dark')
+  }
 
   const renderEntity = (entity: NavEntitySerializable) => {
     const href =
@@ -186,13 +259,23 @@ export const NavClient: React.FC<Props> = ({
   }
 
   return (
-    <aside
-      className={`mc-sidebar ${collapsed ? 'mc-sidebar--collapsed' : ''}`}
+    <>
+      {/* Backdrop — only rendered when drawer is open on narrow viewports.
+         CSS hides it at >=1200px so it never interferes with desktop. */}
+      {navOpen && (
+        <div
+          className="mc-sidebar__backdrop"
+          onClick={() => setNavOpen(false)}
+          aria-hidden
+        />
+      )}
+      <aside
+      className={`mc-sidebar ${collapsed ? 'mc-sidebar--collapsed' : ''} ${navOpen ? 'mc-sidebar--open' : ''}`}
       data-hydrated={hydrated ? 'true' : 'false'}
       aria-label="Primary navigation"
     >
-      {/* Brand / workspace */}
-      <div className="mc-sidebar__brand">
+      {/* Brand / workspace + quick menu */}
+      <div className="mc-sidebar__brand" ref={brandRef}>
         <div className="mc-sidebar__brand-mark" aria-hidden>
           <Sparkles size={16} strokeWidth={2.5} />
         </div>
@@ -205,11 +288,73 @@ export const NavClient: React.FC<Props> = ({
         {!collapsed && (
           <button
             type="button"
-            className="mc-sidebar__brand-switch"
-            aria-label="Switch workspace"
+            className={`mc-sidebar__brand-switch ${brandMenuOpen ? 'is-open' : ''}`}
+            aria-label="Open quick menu"
+            aria-haspopup="menu"
+            aria-expanded={brandMenuOpen}
+            onClick={() => setBrandMenuOpen((v) => !v)}
           >
             <ChevronDown size={14} />
           </button>
+        )}
+
+        {brandMenuOpen && (
+          <div className="mc-sidebar__brand-menu" role="menu">
+            <div className="mc-sidebar__brand-menu-label">Quick actions</div>
+
+            <button
+              type="button"
+              className="mc-sidebar__brand-menu-item"
+              onClick={() => {
+                toggleTheme()
+              }}
+              role="menuitem"
+            >
+              {themeMounted && theme === 'dark' ? (
+                <Sun size={14} strokeWidth={2} />
+              ) : (
+                <Moon size={14} strokeWidth={2} />
+              )}
+              <span className="mc-sidebar__brand-menu-item-label">
+                {themeMounted && theme === 'dark' ? 'Light theme' : 'Dark theme'}
+              </span>
+            </button>
+
+            <Link
+              href={accountHref}
+              className="mc-sidebar__brand-menu-item"
+              onClick={() => setBrandMenuOpen(false)}
+              role="menuitem"
+            >
+              <UserIcon size={14} strokeWidth={2} />
+              <span className="mc-sidebar__brand-menu-item-label">Account</span>
+            </Link>
+
+            <Link
+              href={accountHref}
+              className="mc-sidebar__brand-menu-item"
+              onClick={() => setBrandMenuOpen(false)}
+              role="menuitem"
+            >
+              <Settings size={14} strokeWidth={2} />
+              <span className="mc-sidebar__brand-menu-item-label">Admin UI language</span>
+              <span className="mc-sidebar__brand-menu-item-meta">
+                set in account
+              </span>
+            </Link>
+
+            <div className="mc-sidebar__brand-menu-divider" aria-hidden />
+
+            <Link
+              href={logoutHref}
+              className="mc-sidebar__brand-menu-item mc-sidebar__brand-menu-item--danger"
+              onClick={() => setBrandMenuOpen(false)}
+              role="menuitem"
+            >
+              <LogOut size={14} strokeWidth={2} />
+              <span className="mc-sidebar__brand-menu-item-label">Sign out</span>
+            </Link>
+          </div>
         )}
       </div>
 
@@ -225,7 +370,7 @@ export const NavClient: React.FC<Props> = ({
             onChange={(e) => setSearch(e.target.value)}
             className="mc-sidebar__search-input"
           />
-          <kbd className="mc-sidebar__search-kbd">⌘K</kbd>
+          <kbd className="mc-sidebar__search-kbd">{modKeyDisplay}K</kbd>
         </div>
       )}
 
@@ -375,12 +520,13 @@ export const NavClient: React.FC<Props> = ({
           className="mc-sidebar__collapse"
           onClick={() => setCollapsed((v) => !v)}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          title={`${collapsed ? 'Expand' : 'Collapse'} (⌘B)`}
+          title={`${collapsed ? 'Expand' : 'Collapse'} (${modKey}+B)`}
         >
           {collapsed ? <ChevronsRight size={15} /> : <ChevronsLeft size={15} />}
         </button>
       </div>
     </aside>
+    </>
   )
 }
 
