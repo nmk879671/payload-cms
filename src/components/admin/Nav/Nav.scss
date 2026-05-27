@@ -4,11 +4,17 @@
 
 .mc-sidebar {
   --mc-pad-x: 14px;
-  position: relative;
+  /* Sticky so the sidebar stays in place as the main content scrolls.
+     Height is locked to (viewport - topbar) so brand + body + footer
+     stay fully visible; long nav lists scroll inside .mc-sidebar__body. */
+  position: sticky;
+  top: var(--mc-topbar-h);
+  align-self: flex-start;
   display: flex;
   flex-direction: column;
   width: var(--mc-sidebar-w);
-  height: 100%;
+  height: calc(100vh - var(--mc-topbar-h));
+  max-height: calc(100vh - var(--mc-topbar-h));
   background: var(--mc-sidebar);
   color: var(--mc-text-2);
   transition: width var(--mc-dur) var(--mc-ease);
