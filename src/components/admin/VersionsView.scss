@@ -1,0 +1,149 @@
+.pages-versions-view {
+  padding: 24px 28px 64px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  &__header {
+    margin-bottom: 20px;
+  }
+
+  &__title {
+    font-size: 22px;
+    line-height: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--mc-text);
+    margin: 0 0 4px;
+  }
+
+  &__sub {
+    color: var(--mc-text-3);
+    font-size: 13px;
+    margin: 0;
+  }
+
+  &__empty {
+    padding: 56px 24px;
+    text-align: center;
+    color: var(--mc-text-3);
+    background: var(--mc-surface-0);
+    border: 1px dashed var(--mc-border);
+    border-radius: var(--mc-radius-lg);
+  }
+
+  &__table-wrap {
+    border: 1px solid var(--mc-border-soft);
+    border-radius: var(--mc-radius-lg);
+    background: var(--mc-surface-0);
+    overflow: hidden;
+    box-shadow: var(--mc-shadow-soft);
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    thead {
+      background: var(--mc-surface-1);
+      border-bottom: 1px solid var(--mc-border-soft);
+    }
+
+    thead th {
+      padding: 12px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--mc-text-4);
+      text-align: left;
+      border-bottom: 1px solid var(--mc-border-soft);
+    }
+
+    tbody tr {
+      transition: background var(--mc-dur-fast) var(--mc-ease);
+
+      &:hover {
+        background: var(--mc-surface-1);
+      }
+
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+
+    tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--mc-border-soft);
+      color: var(--mc-text-2);
+      font-size: 13.5px;
+      vertical-align: middle;
+    }
+  }
+
+  &__time {
+    color: var(--mc-text) !important;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--mc-dur-fast) var(--mc-ease);
+
+    &:hover {
+      color: var(--mc-brand) !important;
+    }
+  }
+
+  &__row-action {
+    text-align: right;
+    width: 80px;
+
+    a {
+      color: var(--mc-text-3);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      transition: color var(--mc-dur-fast) var(--mc-ease);
+
+      &:hover {
+        color: var(--mc-brand);
+      }
+    }
+  }
+}
+
+/* Status pill variants (scoped so they don't clash with Payload's stock pill) */
+.pages-versions-view .pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  background: var(--mc-surface-2);
+  color: var(--mc-text-2);
+  border: 1px solid var(--mc-border-soft);
+
+  &--success {
+    background: rgba(34, 197, 94, 0.12);
+    color: #4ade80;
+    border-color: rgba(34, 197, 94, 0.24);
+  }
+
+  &--info {
+    background: var(--mc-brand-soft);
+    color: var(--mc-brand);
+    border-color: rgba(91, 140, 255, 0.24);
+  }
+
+  &--warning {
+    background: rgba(251, 191, 36, 0.12);
+    color: #fbbf24;
+    border-color: rgba(251, 191, 36, 0.24);
+  }
+
+  &--neutral {
+    background: var(--mc-surface-2);
+    color: var(--mc-text-3);
+  }
+}

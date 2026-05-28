@@ -142,18 +142,6 @@ export interface Page {
   id: string;
   title: string;
   slug: string;
-  /**
-   * Current status. Use "Change to status" below to request a transition.
-   */
-  status: 'draft' | 'in_review' | 'scheduled' | 'published';
-  /**
-   * Pick a target status and save to request a transition. Cleared after applying.
-   */
-  changeToStatus?: ('draft' | 'in_review' | 'scheduled' | 'published') | null;
-  /**
-   * Required when status is "scheduled".
-   */
-  scheduledAt?: string | null;
   layout: (
     | {
         eyebrow?: string | null;
@@ -287,37 +275,6 @@ export interface Page {
    * Tells Google what kind of content this is. Affects rich-results eligibility.
    */
   schemaType?: ('WebPage' | 'Article' | 'BlogPosting' | 'Product' | 'FAQPage' | 'Organization') | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: string;
-  alt: string;
-  caption?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posts".
- */
-export interface Post {
-  id: string;
-  title: string;
-  slug: string;
   /**
    * Current status. Use "Change to status" below to request a transition.
    */
@@ -330,66 +287,44 @@ export interface Post {
    * Required when status is "scheduled".
    */
   scheduledAt?: string | null;
-  publishedAt?: string | null;
-  author: string | User;
-  coverImage?: (string | null) | Media;
-  excerpt?: string | null;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  categories?: (string | Category)[] | null;
   /**
-   * Recommended 50–60 chars. Falls back to the title.
+   * Set automatically when the document is first created.
    */
-  metaTitle?: string | null;
+  createdBy?: (string | null) | User;
   /**
-   * Recommended 120–160 chars. Shown in Google snippet.
+   * Set automatically when the document is saved.
    */
-  metaDescription?: string | null;
-  /**
-   * Comma-separated. Not used by Google but harmless.
-   */
-  keywords?: string | null;
-  /**
-   * 1200×630 recommended.
-   */
-  ogImage?: (string | null) | Media;
-  ogType?: ('website' | 'article' | 'product') | null;
-  twitterCard?: ('summary' | 'summary_large_image') | null;
-  /**
-   * Optional. Falls back to OG image.
-   */
-  twitterImage?: (string | null) | Media;
-  /**
-   * e.g. @yourbrand
-   */
-  twitterHandle?: string | null;
-  /**
-   * Leave blank to auto-derive from slug.
-   */
-  canonicalUrl?: string | null;
-  /**
-   * Hide from search engines.
-   */
-  noindex?: boolean | null;
-  /**
-   * Tells Google what kind of content this is. Affects rich-results eligibility.
-   */
-  schemaType?: ('WebPage' | 'Article' | 'BlogPosting' | 'Product' | 'FAQPage' | 'Organization') | null;
+  updatedBy?: (string | null) | User;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: string;
+  alt: string;
+  caption?: string | null;
+  /**
+   * Set automatically when the document is first created.
+   */
+  createdBy?: (string | null) | User;
+  /**
+   * Set automatically when the document is saved.
+   */
+  updatedBy?: (string | null) | User;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -450,6 +385,95 @@ export interface Role {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: string;
+  title: string;
+  slug: string;
+  publishedAt?: string | null;
+  author: string | User;
+  coverImage?: (string | null) | Media;
+  excerpt?: string | null;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  categories?: (string | Category)[] | null;
+  /**
+   * Recommended 50–60 chars. Falls back to the title.
+   */
+  metaTitle?: string | null;
+  /**
+   * Recommended 120–160 chars. Shown in Google snippet.
+   */
+  metaDescription?: string | null;
+  /**
+   * Comma-separated. Not used by Google but harmless.
+   */
+  keywords?: string | null;
+  /**
+   * 1200×630 recommended.
+   */
+  ogImage?: (string | null) | Media;
+  ogType?: ('website' | 'article' | 'product') | null;
+  twitterCard?: ('summary' | 'summary_large_image') | null;
+  /**
+   * Optional. Falls back to OG image.
+   */
+  twitterImage?: (string | null) | Media;
+  /**
+   * e.g. @yourbrand
+   */
+  twitterHandle?: string | null;
+  /**
+   * Leave blank to auto-derive from slug.
+   */
+  canonicalUrl?: string | null;
+  /**
+   * Hide from search engines.
+   */
+  noindex?: boolean | null;
+  /**
+   * Tells Google what kind of content this is. Affects rich-results eligibility.
+   */
+  schemaType?: ('WebPage' | 'Article' | 'BlogPosting' | 'Product' | 'FAQPage' | 'Organization') | null;
+  /**
+   * Current status. Use "Change to status" below to request a transition.
+   */
+  status: 'draft' | 'in_review' | 'scheduled' | 'published';
+  /**
+   * Pick a target status and save to request a transition. Cleared after applying.
+   */
+  changeToStatus?: ('draft' | 'in_review' | 'scheduled' | 'published') | null;
+  /**
+   * Required when status is "scheduled".
+   */
+  scheduledAt?: string | null;
+  /**
+   * Set automatically when the document is first created.
+   */
+  createdBy?: (string | null) | User;
+  /**
+   * Set automatically when the document is saved.
+   */
+  updatedBy?: (string | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".
  */
 export interface Category {
@@ -461,6 +485,14 @@ export interface Category {
    */
   parent?: (string | null) | Category;
   description?: string | null;
+  /**
+   * Set automatically when the document is first created.
+   */
+  createdBy?: (string | null) | User;
+  /**
+   * Set automatically when the document is saved.
+   */
+  updatedBy?: (string | null) | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -561,9 +593,6 @@ export interface PayloadMigration {
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
-  status?: T;
-  changeToStatus?: T;
-  scheduledAt?: T;
   layout?:
     | T
     | {
@@ -649,6 +678,11 @@ export interface PagesSelect<T extends boolean = true> {
   canonicalUrl?: T;
   noindex?: T;
   schemaType?: T;
+  status?: T;
+  changeToStatus?: T;
+  scheduledAt?: T;
+  createdBy?: T;
+  updatedBy?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -659,9 +693,6 @@ export interface PagesSelect<T extends boolean = true> {
 export interface PostsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
-  status?: T;
-  changeToStatus?: T;
-  scheduledAt?: T;
   publishedAt?: T;
   author?: T;
   coverImage?: T;
@@ -679,6 +710,11 @@ export interface PostsSelect<T extends boolean = true> {
   canonicalUrl?: T;
   noindex?: T;
   schemaType?: T;
+  status?: T;
+  changeToStatus?: T;
+  scheduledAt?: T;
+  createdBy?: T;
+  updatedBy?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -691,6 +727,8 @@ export interface CategoriesSelect<T extends boolean = true> {
   slug?: T;
   parent?: T;
   description?: T;
+  createdBy?: T;
+  updatedBy?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -701,6 +739,8 @@ export interface CategoriesSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
+  createdBy?: T;
+  updatedBy?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

@@ -5,10 +5,6 @@ import {
   hasRole,
 } from '../access/roles'
 import { seoTab } from '../seo/fields'
-import {
-  statusWorkflowFields,
-  statusWorkflowHook,
-} from '../hooks/statusWorkflow'
 
 const siteUrl = () =>
   process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
@@ -42,9 +38,6 @@ export const Posts: CollectionConfig = {
   versions: {
     maxPerDoc: 50,
   },
-  hooks: {
-    beforeChange: [statusWorkflowHook],
-  },
   fields: [
     { name: 'title', type: 'text', required: true, localized: true },
     {
@@ -54,7 +47,6 @@ export const Posts: CollectionConfig = {
       unique: true,
       admin: { position: 'sidebar' },
     },
-    ...statusWorkflowFields,
     {
       name: 'publishedAt',
       type: 'date',

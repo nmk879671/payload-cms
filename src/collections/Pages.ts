@@ -6,10 +6,6 @@ import { MediaBlock } from '../blocks/MediaBlock'
 import { CTA } from '../blocks/CTA'
 import { FAQ } from '../blocks/FAQ'
 import { seoTab } from '../seo/fields'
-import {
-  statusWorkflowFields,
-  statusWorkflowHook,
-} from '../hooks/statusWorkflow'
 
 const siteUrl = () =>
   process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
@@ -43,9 +39,6 @@ export const Pages: CollectionConfig = {
   versions: {
     maxPerDoc: 50,
   },
-  hooks: {
-    beforeChange: [statusWorkflowHook],
-  },
   fields: [
     { name: 'title', type: 'text', required: true, localized: true },
     {
@@ -55,7 +48,6 @@ export const Pages: CollectionConfig = {
       unique: true,
       admin: { position: 'sidebar' },
     },
-    ...statusWorkflowFields,
     {
       type: 'tabs',
       tabs: [

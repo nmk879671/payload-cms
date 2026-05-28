@@ -137,11 +137,19 @@ const Nav: React.FC<ServerProps> = (props) => {
     (user as { email?: string } | null)?.email ||
     'Admin'
 
+  // Review Board is for users who actually act on in_review docs:
+  // admins and any role keyed `*_reviewer`. We pass a flag instead of the
+  // raw role so the client component stays serialization-safe.
+  const roleKey = (user as { role?: { key?: string } } | null)?.role?.key || ''
+  const canReview =
+    roleKey === 'admin' || roleKey.endsWith('_reviewer')
+
   return (
     <NavClient
       adminRoute="/admin"
       groups={safeGroups}
       userLabel={userLabel}
+      canReview={canReview}
     />
   )
 }

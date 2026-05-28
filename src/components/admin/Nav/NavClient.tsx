@@ -4,6 +4,7 @@ import {
   ChevronDown,
   ChevronsLeft,
   ChevronsRight,
+  ClipboardCheck,
   LogOut,
   Moon,
   Search,
@@ -47,6 +48,7 @@ type Props = {
   adminRoute: string
   groups: NavGroupSerializable[]
   userLabel: string
+  canReview?: boolean
 }
 
 const STORAGE_KEY_COLLAPSED = 'mc-nav-collapsed'
@@ -62,6 +64,7 @@ export const NavClient: React.FC<Props> = ({
   adminRoute,
   groups,
   userLabel,
+  canReview = false,
 }) => {
   const pathname = usePathname() || '/admin'
   const router = useRouter()
@@ -384,6 +387,17 @@ export const NavClient: React.FC<Props> = ({
           icon={dashboardIcon}
           label="Dashboard"
         />
+
+        {/* Review Board — only visible to reviewers + admins */}
+        {canReview && (
+          <NavLinkRow
+            collapsed={collapsed}
+            href={`${adminRoute}/review-board`}
+            active={isPathActive(pathname, `${adminRoute}/review-board`)}
+            icon={ClipboardCheck}
+            label="Review Board"
+          />
+        )}
 
         {/* Groups */}
         {filteredGroups.map((group) => {

@@ -16,6 +16,8 @@ import { Categories } from './collections/Categories'
 import { Roles } from './collections/Roles'
 import { seedRoles } from './seed/seedRoles'
 import { publishScheduled } from './jobs/publishScheduled'
+import { withVersionTracking } from './lib/withVersionTracking'
+import { withWorkflow } from './lib/withWorkflow'
 
 declare global {
   // eslint-disable-next-line no-var
@@ -41,6 +43,10 @@ export default buildConfig({
         dashboard: {
           Component: '/components/Dashboard#default',
         },
+        reviewBoard: {
+          Component: '/components/admin/ReviewBoard#default',
+          path: '/review-board',
+        },
       },
     },
     importMap: {
@@ -61,7 +67,14 @@ export default buildConfig({
     defaultLocale: 'en',
     fallback: true,
   },
-  collections: [Pages, Posts, Categories, Media, Users, Roles],
+  collections: [
+    withWorkflow(Pages, { flow: 'reviewScheduled', scope: 'ir' }),
+    withWorkflow(Posts, { flow: 'review', scope: 'pr' }),
+    Categories,
+    Media,
+    Users,
+    Roles,
+  ].map(withVersionTracking),
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
