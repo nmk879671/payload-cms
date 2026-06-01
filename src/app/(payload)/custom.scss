@@ -1325,18 +1325,28 @@ a.list-create-new-doc__create-new-button {
    Tabs (Content / SEO / etc.)
    ============================================================ */
 .tabs-field {
-  margin-bottom: 24px !important;
+  margin: 0 0 24px !important;
 }
 
+/* tabs-wrap extends to the card's padding edges (negative margin) so the
+   border-bottom hugs the card. Internal padding restores button alignment
+   with the form content below. */
 .tabs-field__tabs-wrap {
   border-bottom: 1px solid var(--mc-border-soft) !important;
-  margin-bottom: 24px !important;
-  padding-bottom: 0 !important;
+  margin: 0 -28px 24px !important;
+  padding: 0 28px !important;
 }
 
 .tabs-field__tabs {
   gap: 2px !important;
   display: flex;
+  border-bottom: none !important; /* avoid duplicate with __tabs-wrap */
+}
+
+/* Payload stock adds a 60px-wide ::before to push the tab list inward.
+   Remove it so tabs align with form content. */
+.tabs-field__tabs::before {
+  content: none !important;
 }
 
 .tabs-field__tab-button {
@@ -1350,6 +1360,11 @@ a.list-create-new-doc__create-new-button {
   opacity: 1 !important;
   position: relative;
   transition: color var(--mc-dur-fast) var(--mc-ease);
+}
+
+/* Align the first tab's text with form content below (no leading padding). */
+.tabs-field__tabs > .tabs-field__tab-button:first-child {
+  padding-left: 0 !important;
 }
 
 .tabs-field__tab-button:hover {
@@ -1373,6 +1388,12 @@ a.list-create-new-doc__create-new-button {
 
 .tabs-field__tab-button--active::after {
   opacity: 1 !important;
+}
+
+/* Align tab content with form fields above the tabs (Payload stock adds
+   60px horizontal padding here). */
+.tabs-field__content-wrap {
+  padding: 0 !important;
 }
 
 /* ============================================================
