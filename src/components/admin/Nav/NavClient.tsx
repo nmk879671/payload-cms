@@ -4,13 +4,15 @@ import {
   ChevronDown,
   ChevronsLeft,
   ChevronsRight,
-  ClipboardCheck,
+  Inbox,
+  LayoutGrid,
   LogOut,
   Moon,
   Search,
   Settings,
   Sparkles,
   Sun,
+  Table as TableIcon,
   User as UserIcon,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -388,15 +390,33 @@ export const NavClient: React.FC<Props> = ({
           label="Dashboard"
         />
 
-        {/* Review Board — only visible to reviewers + admins */}
+        {/* Review Board — three design variants for PM to compare.
+           Flat top-level paths so Payload's router doesn't greedy-match
+           the cards path against /review-board-table etc. */}
         {canReview && (
-          <NavLinkRow
-            collapsed={collapsed}
-            href={`${adminRoute}/review-board`}
-            active={isPathActive(pathname, `${adminRoute}/review-board`)}
-            icon={ClipboardCheck}
-            label="Review Board"
-          />
+          <>
+            <NavLinkRow
+              collapsed={collapsed}
+              href={`${adminRoute}/review-board`}
+              active={isPathActive(pathname, `${adminRoute}/review-board`)}
+              icon={LayoutGrid}
+              label="Review · Cards"
+            />
+            <NavLinkRow
+              collapsed={collapsed}
+              href={`${adminRoute}/review-board-table`}
+              active={isPathActive(pathname, `${adminRoute}/review-board-table`)}
+              icon={TableIcon}
+              label="Review · Table"
+            />
+            <NavLinkRow
+              collapsed={collapsed}
+              href={`${adminRoute}/review-board-inbox`}
+              active={isPathActive(pathname, `${adminRoute}/review-board-inbox`)}
+              icon={Inbox}
+              label="Review · Inbox"
+            />
+          </>
         )}
 
         {/* Groups */}

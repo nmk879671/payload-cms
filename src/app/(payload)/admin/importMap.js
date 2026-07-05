@@ -26,6 +26,8 @@ import { default as default_965175d01b56876a09418037afb35340 } from '../../../co
 import { default as default_c285879fd84e20063c0cb2b8b92f37dc } from '../../../components/admin/Topbar'
 import { default as default_9a680279bc487e655cb510fd8d9dadff } from '../../../components/Dashboard'
 import { default as default_78ab6ab23fdd616d69c8bc6b7795f6ff } from '../../../components/admin/ReviewBoard'
+import { default as default_0404a6939a7241f7c2e5e506e04c0beb } from '../../../components/admin/ReviewBoardTable'
+import { default as default_d2f28ff73f0e2f241c96969d142baabe } from '../../../components/admin/ReviewBoardInbox'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -58,5 +60,7 @@ export const importMap = {
   "/components/admin/Topbar#default": default_c285879fd84e20063c0cb2b8b92f37dc,
   "/components/Dashboard#default": default_9a680279bc487e655cb510fd8d9dadff,
   "/components/admin/ReviewBoard#default": default_78ab6ab23fdd616d69c8bc6b7795f6ff,
+  "/components/admin/ReviewBoardTable#default": default_0404a6939a7241f7c2e5e506e04c0beb,
+  "/components/admin/ReviewBoardInbox#default": default_d2f28ff73f0e2f241c96969d142baabe,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

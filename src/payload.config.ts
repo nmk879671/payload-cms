@@ -47,6 +47,14 @@ export default buildConfig({
           Component: '/components/admin/ReviewBoard#default',
           path: '/review-board',
         },
+        reviewBoardTable: {
+          Component: '/components/admin/ReviewBoardTable#default',
+          path: '/review-board-table',
+        },
+        reviewBoardInbox: {
+          Component: '/components/admin/ReviewBoardInbox#default',
+          path: '/review-board-inbox',
+        },
       },
     },
     importMap: {

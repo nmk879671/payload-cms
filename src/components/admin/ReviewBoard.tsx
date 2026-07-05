@@ -2,29 +2,11 @@ import type { AdminViewServerProps } from 'payload'
 import { DefaultTemplate } from '@payloadcms/next/templates'
 import { getVisibleEntities } from '@payloadcms/ui/shared'
 import Link from 'next/link'
-import { ExternalLink, Inbox } from 'lucide-react'
+import { ArrowUpRight, Inbox } from 'lucide-react'
 import React from 'react'
 
-import { ApproveButton, RejectButton } from './ReviewBoardActions'
+import { fetchReviewData, formatDate } from './reviewBoardData'
 import './ReviewBoard.scss'
-
-/* Collections that participate in the review workflow.
-   Add new slugs here when more collections start using `withWorkflow`. */
-const WORKFLOW_COLLECTIONS: { slug: string; label: string }[] = [
-  { slug: 'pages', label: 'Pages' },
-  { slug: 'posts', label: 'Posts' },
-]
-
-const formatDate = (d?: string | null) => {
-  if (!d) return '—'
-  const date = new Date(d)
-  return date.toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
 
 const ReviewBoard: React.FC<AdminViewServerProps> = async (props) => {
   const { initPageResult, params, searchParams } = props
@@ -43,70 +25,10 @@ const ReviewBoard: React.FC<AdminViewServerProps> = async (props) => {
   }
 
   const visibleEntities = getVisibleEntities({ req })
-
-  // Fetch in_review docs per collection — Payload's access pipeline
-  // (combineWithScope) automatically filters to what this user can see.
-  // We catch per-collection errors so one denied scope doesn't blank the
-  // whole board for cross-scope reviewers.
-  const sections = await Promise.all(
-    WORKFLOW_COLLECTIONS.map(async (c) => {
-      try {
-        const result = await payload.find({
-          collection: c.slug as any,
-          where: { status: { equals: 'in_review' } },
-          sort: '-updatedAt',
-          limit: 100,
-          depth: 0,
-          overrideAccess: false,
-          user,
-        })
-        return { ...c, docs: result.docs as any[] }
-      } catch {
-        return { ...c, docs: [] as any[] }
-      }
-    }),
-  )
-
-  // Batch-resolve all updatedBy user IDs in one query (overrideAccess so
-  // users-collection read restrictions don't leave us with "Unknown").
-  const userIDs = Array.from(
-    new Set(
-      sections
-        .flatMap((s) => s.docs.map((d: any) => d.updatedBy))
-        .filter((u): u is string => typeof u === 'string' && u.length > 0)
-        .concat(
-          sections.flatMap((s) =>
-            s.docs
-              .map((d: any) => (typeof d.updatedBy === 'object' ? d.updatedBy?.id : null))
-              .filter(Boolean),
-          ),
-        ),
-    ),
-  )
-
-  const usersByID = new Map<string, { name?: string; email?: string }>()
-  if (userIDs.length > 0) {
-    const users = await payload.find({
-      collection: 'users',
-      where: { id: { in: userIDs } },
-      limit: userIDs.length,
-      depth: 0,
-      overrideAccess: true,
-    })
-    users.docs.forEach((u: any) => usersByID.set(String(u.id), u))
-  }
-
-  const resolveSubmitter = (updatedBy: any): string => {
-    if (!updatedBy) return '—'
-    if (typeof updatedBy === 'object') {
-      return updatedBy.name || updatedBy.email || 'Unknown'
-    }
-    const u = usersByID.get(String(updatedBy))
-    return u ? u.name || u.email || 'Unknown' : 'Unknown'
-  }
-
-  const totalCount = sections.reduce((sum, s) => sum + s.docs.length, 0)
-  const visibleSections = sections.filter((s) => s.docs.length > 0)
+  const { visibleSections, totalCount, resolveSubmitter } = await fetchReviewData({
+    payload,
+    user,
+  })
 
   const content = (
     <div className="review-board">
@@ -115,7 +37,7 @@ const ReviewBoard: React.FC<AdminViewServerProps> = async (props) => {
         <p className="review-board__sub">
           {totalCount === 0
             ? 'No items waiting for review.'
-            : `${totalCount} item${totalCount === 1 ? '' : 's'} pending review`}
+            : `${totalCount} item${totalCount === 1 ? '' : 's'} pending review — open a card to change its status.`}
         </p>
       </header>
 
@@ -143,21 +65,18 @@ const ReviewBoard: React.FC<AdminViewServerProps> = async (props) => {
                 const submitter = resolveSubmitter(doc.updatedBy)
 
                 return (
-                  <article key={doc.id} className="review-board__card">
+                  <Link
+                    key={doc.id}
+                    href={editHref}
+                    className="review-board__card"
+                  >
                     <div className="review-board__card-header">
                       <h3 className="review-board__card-title">
                         {doc.title || doc.slug || 'Untitled'}
                       </h3>
-                      <Link
-                        href={editHref}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="review-board__card-open"
-                        title="Open in new tab"
-                      >
-                        <ExternalLink size={13} strokeWidth={2} />
-                        <span>Open</span>
-                      </Link>
+                      <span className="review-board__card-open" aria-hidden>
+                        <ArrowUpRight size={14} strokeWidth={2} />
+                      </span>
                     </div>
 
                     <dl className="review-board__card-meta">
@@ -170,12 +89,7 @@ const ReviewBoard: React.FC<AdminViewServerProps> = async (props) => {
                         <dd>{formatDate(doc.updatedAt)}</dd>
                       </div>
                     </dl>
-
-                    <div className="review-board__card-actions">
-                      <RejectButton collection={section.slug} id={doc.id} />
-                      <ApproveButton collection={section.slug} id={doc.id} />
-                    </div>
-                  </article>
+                  </Link>
                 )
               })}
             </div>

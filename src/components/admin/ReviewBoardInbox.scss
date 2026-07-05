@@ -1,10 +1,10 @@
-.review-board {
+.rb-inbox {
   padding: 32px 32px 80px;
-  max-width: 1280px;
+  max-width: 1080px;
   margin: 0 auto;
 
   &__header {
-    margin-bottom: 28px;
+    margin-bottom: 20px;
     padding-bottom: 18px;
     border-bottom: 1px solid var(--mc-border-soft);
   }
@@ -24,9 +24,6 @@
     margin: 0;
   }
 
-  /* ============================================================
-     Empty state
-     ============================================================ */
   &__empty {
     display: flex;
     flex-direction: column;
@@ -58,8 +55,7 @@
      Section per collection
      ============================================================ */
   &__section {
-    margin-bottom: 32px;
-
+    margin-bottom: 28px;
     &:last-child { margin-bottom: 0; }
   }
 
@@ -67,7 +63,7 @@
     display: flex;
     align-items: baseline;
     gap: 10px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
 
   &__section-title {
@@ -94,100 +90,99 @@
   }
 
   /* ============================================================
-     Card grid — whole card is a link (no action buttons).
+     Grouped list of rich rows.
      ============================================================ */
-  &__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 14px;
-  }
-
-  &__card {
-    display: flex;
-    flex-direction: column;
-    padding: 18px 18px 16px;
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     background: var(--mc-surface-0);
     border: 1px solid var(--mc-border-soft);
     border-radius: var(--mc-radius-lg);
     box-shadow: var(--mc-shadow-soft);
+    overflow: hidden;
+  }
+
+  &__row {
+    border-bottom: 1px solid var(--mc-border-soft);
+    &:last-child { border-bottom: none; }
+  }
+
+  &__row-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
     color: inherit !important;
     text-decoration: none !important;
-    transition: border-color var(--mc-dur-fast) var(--mc-ease),
-                transform var(--mc-dur-fast) var(--mc-ease),
-                box-shadow var(--mc-dur-fast) var(--mc-ease);
+    transition: background var(--mc-dur-fast) var(--mc-ease);
 
     &:hover {
-      border-color: var(--mc-brand);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      background: rgba(91, 140, 255, 0.06);
 
-      .review-board__card-open {
-        background: var(--mc-brand-soft);
+      .rb-inbox__row-title { color: var(--mc-brand); }
+      .rb-inbox__row-arrow {
+        opacity: 1;
+        transform: translateX(0);
         color: var(--mc-brand);
-        border-color: rgba(91, 140, 255, 0.32);
       }
     }
   }
 
-  &__card-header {
+  &__body {
+    flex: 1;
+    min-width: 0;
     display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 12px;
+    flex-direction: column;
+    gap: 3px;
   }
 
-  &__card-title {
-    flex: 1;
-    font-size: 15px;
+  &__row-title {
+    font-size: 14.5px;
     font-weight: 600;
     color: var(--mc-text);
     line-height: 1.35;
-    margin: 0;
-    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color var(--mc-dur-fast) var(--mc-ease);
   }
 
-  &__card-open {
+  &__row-meta {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--mc-text-4);
+  }
+
+  &__row-submitter {
+    color: var(--mc-text-3);
+    font-weight: 500;
+  }
+
+  &__row-dot { color: var(--mc-text-4); }
+
+  &__row-date {
+    flex-shrink: 0;
+    font-size: 12px;
+    color: var(--mc-text-4);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__row-arrow {
     flex-shrink: 0;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 26px;
-    height: 26px;
-    background: var(--mc-surface-2);
-    border: 1px solid var(--mc-border-soft);
-    border-radius: 6px;
-    color: var(--mc-text-3);
+    color: var(--mc-text-4);
+    opacity: 0;
+    transform: translateX(-4px);
     transition: all var(--mc-dur-fast) var(--mc-ease);
   }
 
-  &__card-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin: 0;
-    padding: 0;
-
-    > div {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      font-size: 12px;
-    }
-
-    dt {
-      color: var(--mc-text-4);
-      width: 88px;
-      flex-shrink: 0;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      font-size: 10px;
-      font-weight: 600;
-    }
-
-    dd {
-      color: var(--mc-text-2);
-      margin: 0;
-      font-size: 12.5px;
-    }
+  /* Narrow viewports: hide the absolute date, keep the relative meta */
+  @media (max-width: 720px) {
+    &__row-date { display: none; }
   }
 }
